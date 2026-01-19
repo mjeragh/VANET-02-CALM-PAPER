@@ -1,0 +1,202 @@
+\documentclass[journal]{IEEEtran}
+
+% Packages
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{subcaption}
+
+% Custom commands
+\newcommand{\calm}{\textsc{Calm}}
+\newcommand{\kl}{\text{KL}}
+
+\begin{document}
+
+\title{CALM: Preventing Mode Collapse in Multi-Agent Reinforcement Learning for Cooperative Autonomous Driving}
+
+\author{
+    \IEEEauthorblockN{Mohammad Jeragh\IEEEauthorrefmark{1} and Ibrahim Alrashed\IEEEauthorrefmark{1}}
+    \IEEEauthorblockA{\IEEEauthorrefmark{1}Computer Engineering Department, College of Engineering and Petroleum\\
+    Kuwait University, Kuwait\\
+    Email: \{mohammad.jeragh, ibrahim.alrashed\}@ku.edu.kw}
+}
+
+\maketitle
+
+\begin{abstract}
+Mode collapse is a critical challenge in multi-agent reinforcement learning (MARL) for autonomous driving, where trained policies converge to repetitive, non-diverse behaviors that fail to capture the richness of human driving patterns. This paper presents CALM (Constrained Action Learning for Multi-agents), a novel hybrid approach that combines behavioral cloning with reinforcement learning through KL divergence regularization. Using 47,874 human driving samples from the NGSIM dataset as a behavioral prior, CALM prevents mode collapse while maintaining task performance through a decaying constraint mechanism that enables smooth transition from imitation to optimization. Experiments on cooperative highway exit coordination scenarios using SUMO simulation demonstrate that CALM achieves 35.22\% action agreement with human drivers and 74.07\% behavioral similarity, significantly outperforming entropy-regularization-only approaches (22.74\% agreement) and preventing the complete mode collapse observed in standard MADDPG training. Ablation studies reveal the importance of the decaying KL coefficient, and scalability experiments demonstrate consistent performance with up to 20 cooperative agents. Our results suggest that incorporating human behavioral priors through constrained learning is essential for developing MARL policies that exhibit diverse, human-like driving behaviors suitable for real-world deployment.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Multi-agent reinforcement learning, mode collapse, imitation learning, autonomous driving, behavioral cloning, cooperative driving
+\end{IEEEkeywords}
+
+% ============================================================================
+\section{Introduction}
+\label{sec:introduction}
+% ============================================================================
+
+% TODO: Write introduction
+% - Mode collapse problem in MARL
+% - Importance for autonomous driving safety
+% - Gap in existing approaches
+% - Our contribution: CALM
+
+\textcolor{red}{[TODO: Introduction - 1 page]}
+
+% ============================================================================
+\section{Related Work}
+\label{sec:related}
+% ============================================================================
+
+% TODO: Write related work
+% - Mode collapse in deep RL
+% - Imitation learning (BC, GAIL, DAgger)
+% - MARL for autonomous driving
+% - Hybrid IL+RL approaches
+
+\textcolor{red}{[TODO: Related Work - 1.5 pages]}
+
+\subsection{Mode Collapse in Deep Reinforcement Learning}
+
+\subsection{Imitation Learning}
+
+\subsection{Multi-Agent RL for Autonomous Driving}
+
+\subsection{Hybrid Imitation and Reinforcement Learning}
+
+% ============================================================================
+\section{Problem Formulation}
+\label{sec:problem}
+% ============================================================================
+
+% TODO: Write problem formulation
+% - Dec-POMDP framework
+% - Mode collapse definition
+% - NGSIM human driving distribution
+
+\textcolor{red}{[TODO: Problem Formulation - 1 page]}
+
+\subsection{Decentralized POMDP Framework}
+
+\subsection{Mode Collapse in MARL}
+
+\subsection{Human Driving Distribution}
+
+% ============================================================================
+\section{CALM: Proposed Method}
+\label{sec:method}
+% ============================================================================
+
+% TODO: Write methodology
+% - BC pre-training
+% - Hybrid loss formulation
+% - Decaying KL regularization
+% - Theoretical analysis
+
+\textcolor{red}{[TODO: Methodology - 2 pages]}
+
+\subsection{Behavioral Cloning Pre-training}
+
+\subsection{Hybrid Loss Formulation}
+
+The \calm{} actor loss combines policy gradient, entropy regularization, and KL divergence constraint:
+
+\begin{equation}
+\mathcal{L}_{\text{actor}} = -\mathbb{E}[Q(s, \pi(s))] - \alpha H(\pi) + \lambda \cdot \kl(\pi \| \pi_{BC})
+\label{eq:calm_loss}
+\end{equation}
+
+where $\alpha$ is the entropy coefficient, $\lambda$ is the BC regularization coefficient, and $\pi_{BC}$ is the frozen behavioral cloning policy.
+
+\subsection{Decaying KL Regularization}
+
+The BC coefficient decays over training episodes:
+
+\begin{equation}
+\lambda_t = \lambda_0 \cdot \gamma_{BC}^t
+\label{eq:decay}
+\end{equation}
+
+where $\lambda_0$ is the initial coefficient and $\gamma_{BC}$ is the decay rate.
+
+\subsection{Theoretical Analysis}
+
+% ============================================================================
+\section{Experimental Setup}
+\label{sec:setup}
+% ============================================================================
+
+% TODO: Write experimental setup
+% - SUMO simulation environment
+% - NGSIM dataset description
+% - Baseline methods
+% - Evaluation metrics
+
+\textcolor{red}{[TODO: Experimental Setup - 1 page]}
+
+\subsection{Simulation Environment}
+
+\subsection{NGSIM Dataset}
+
+\subsection{Baseline Methods}
+
+\subsection{Evaluation Metrics}
+
+% ============================================================================
+\section{Results}
+\label{sec:results}
+% ============================================================================
+
+% TODO: Write results
+% - Mode collapse prevention
+% - Comparison with baselines
+% - Ablation studies
+% - Scalability analysis
+
+\textcolor{red}{[TODO: Results - 2.5 pages]}
+
+\subsection{Mode Collapse Prevention}
+
+\subsection{Comparison with Baselines}
+
+\subsection{Ablation Studies}
+
+\subsection{Scalability Analysis}
+
+% ============================================================================
+\section{Discussion}
+\label{sec:discussion}
+% ============================================================================
+
+% TODO: Write discussion
+% - Limitations
+% - Implications for CAV deployment
+% - Future directions
+
+\textcolor{red}{[TODO: Discussion - 1 page]}
+
+% ============================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+% ============================================================================
+
+% TODO: Write conclusion
+
+\textcolor{red}{[TODO: Conclusion - 0.5 page]}
+
+% ============================================================================
+% References
+% ============================================================================
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
