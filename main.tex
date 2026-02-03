@@ -6,7 +6,7 @@
 
 \documentclass[journal]{IEEEtran}
 
-\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
 \usepackage{algorithmic}
 \usepackage{algorithm}
 \usepackage{graphicx}
@@ -150,7 +150,7 @@ We formulate cooperative highway exit coordination as a Decentralized Partially 
 \begin{itemize}
     \item $N$ is the set of $n$ CAV agents;
     \item $\cS$ is the global state space (positions, velocities, and lane assignments of all vehicles);
-    \item $\cA_i = \{\text{Lane\_Left}, \text{Lane\_Right}, \text{Accelerate}, \text{Decelerate}, \text{Maintain}\}$ is the discrete action space for agent $i$;
+    \item $\cA_i$ is the discrete action space for agent $i$ with five actions: \emph{Lane\_Left}, \emph{Lane\_Right}, \emph{Accelerate}, \emph{Decelerate}, and \emph{Maintain};
     \item $\cO_i$ is the local observation space for agent $i$, containing ego-vehicle state and nearby vehicle information within a sensing radius;
     \item $T: \cS \times \cA \rightarrow \Delta(\cS)$ is the state transition function governed by the SUMO traffic simulator~\cite{lopez2018microscopic};
     \item $O: \cS \times N \rightarrow \cO_i$ is the observation function;
@@ -406,6 +406,7 @@ Notably, the entropy-only baseline achieves only $14.6\% \pm 23.8\%$ agreement--
 \centering
 \caption{NGSIM Action Agreement and Action Diversity (5 seeds per method)}
 \label{tab:agreement}
+\footnotesize
 \begin{tabular}{lcccc}
 \toprule
 \textbf{Method} & \textbf{Agreement} & \textbf{Similarity} & \textbf{Entropy} & \textbf{Reward} \\
@@ -492,8 +493,6 @@ This trade-off is fundamental: methods that closely match human behavior inherit
 % ============================================================
 \section{Discussion}
 \label{sec:discussion}
-
-% TODO: Week 7 — detailed discussion
 
 \subsection{Key Findings}
 
