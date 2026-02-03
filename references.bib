@@ -1,12 +1,11 @@
-% ============================================================================
-% CALM Paper References
-% ============================================================================
+%% ============================================================
+%% CALM Paper Bibliography
+%% Mode Collapse Prevention in MARL for Cooperative Driving
+%% ============================================================
 
-% ----------------------------------------------------------------------------
-% Mode Collapse in Deep RL
-% ----------------------------------------------------------------------------
+%% === Mode Collapse and Entropy in Deep RL ===
 
-@inproceedings{eysenbach2018diversity,
+@inproceedings{eysenbach2019diversity,
   title={Diversity is all you need: Learning skills without a reward function},
   author={Eysenbach, Benjamin and Gupta, Abhishek and Ibarz, Julian and Levine, Sergey},
   booktitle={International Conference on Learning Representations},
@@ -22,45 +21,64 @@
   organization={PMLR}
 }
 
-@article{kumar2020conservative,
-  title={Conservative q-learning for offline reinforcement learning},
-  author={Kumar, Aviral and Zhou, Aurick and Tucker, George and Levine, Sergey},
+@article{haarnoja2018softb,
+  title={Soft actor-critic algorithms and applications},
+  author={Haarnoja, Tuomas and Zhou, Aurick and Hartikainen, Kristian and Tucker, George and Ha, Sehoon and Tan, Jie and Kumar, Vikash and Zhu, Henry and Gupta, Abhishek and Abbeel, Pieter and Levine, Sergey},
+  journal={arXiv preprint arXiv:1812.05905},
+  year={2018}
+}
+
+@inproceedings{ahmed2019understanding,
+  title={Understanding the impact of entropy on policy optimization},
+  author={Ahmed, Zafarali and Le Roux, Nicolas and Norouzi, Mohammad and Schuurmans, Dale},
+  booktitle={International Conference on Machine Learning},
+  pages={151--160},
+  year={2019},
+  organization={PMLR}
+}
+
+@article{tang2017exploration,
+  title={{\#}Exploration: A study of count-based exploration for deep reinforcement learning},
+  author={Tang, Haoran and Houthooft, Rein and Foote, Davis and Stooke, Adam and Chen, Xi and Duan, Yan and Schulman, John and De Turck, Filip and Abbeel, Pieter},
   journal={Advances in Neural Information Processing Systems},
-  volume={33},
-  pages={1179--1191},
-  year={2020}
+  volume={30},
+  year={2017}
 }
 
-% ----------------------------------------------------------------------------
-% Imitation Learning
-% ----------------------------------------------------------------------------
-
-@inproceedings{ho2016generative,
-  title={Generative adversarial imitation learning},
-  author={Ho, Jonathan and Ermon, Stefano},
-  booktitle={Advances in Neural Information Processing Systems},
-  pages={4565--4573},
-  year={2016}
-}
+%% === Imitation Learning ===
 
 @inproceedings{ross2011reduction,
   title={A reduction of imitation learning and structured prediction to no-regret online learning},
   author={Ross, St{\'e}phane and Gordon, Geoffrey and Bagnell, Drew},
-  booktitle={Proceedings of the Fourteenth International Conference on Artificial Intelligence and Statistics},
+  booktitle={Proceedings of the fourteenth international conference on artificial intelligence and statistics},
   pages={627--635},
   year={2011},
   organization={JMLR Workshop and Conference Proceedings}
 }
 
-@article{pomerleau1991efficient,
+@article{ho2016generative,
+  title={Generative adversarial imitation learning},
+  author={Ho, Jonathan and Ermon, Stefano},
+  journal={Advances in Neural Information Processing Systems},
+  volume={29},
+  year={2016}
+}
+
+@inproceedings{pomerleau1991efficient,
   title={Efficient training of artificial neural networks for autonomous navigation},
   author={Pomerleau, Dean A},
   journal={Neural Computation},
   volume={3},
   number={1},
   pages={88--97},
-  year={1991},
-  publisher={MIT Press}
+  year={1991}
+}
+
+@inproceedings{bojarski2016end,
+  title={End to end learning for self-driving cars},
+  author={Bojarski, Mariusz and Del Testa, Davide and Dworakowski, Daniel and Firner, Bernhard and Flepp, Beat and Goyal, Prasoon and Jackel, Lawrence D and Monfort, Mathieu and Muller, Urs and Zhang, Jiakai and others},
+  journal={arXiv preprint arXiv:1604.07316},
+  year={2016}
 }
 
 @inproceedings{fujimoto2019off,
@@ -72,30 +90,33 @@
   organization={PMLR}
 }
 
-@inproceedings{nair2018overcoming,
-  title={Overcoming exploration in reinforcement learning with demonstrations},
-  author={Nair, Ashvin and McGrew, Bob and Andrychowicz, Marcin and Zaremba, Wojciech and Abbeel, Pieter},
-  booktitle={IEEE International Conference on Robotics and Automation},
-  pages={6292--6299},
-  year={2018},
-  organization={IEEE}
+@article{nair2020awac,
+  title={Accelerating online reinforcement learning with offline datasets},
+  author={Nair, Ashvin and Dalal, Murtaza and Gupta, Abhishek and Levine, Sergey},
+  journal={arXiv preprint arXiv:2006.09359},
+  year={2020}
 }
 
-% ----------------------------------------------------------------------------
-% Multi-Agent Reinforcement Learning
-% ----------------------------------------------------------------------------
+@inproceedings{rajeswaran2018learning,
+  title={Learning complex dexterous manipulation with deep reinforcement learning and demonstrations},
+  author={Rajeswaran, Aravind and Kumar, Vikash and Gupta, Abhishek and Vezzani, Giulia and Schulman, John and Todorov, Emanuel and Levine, Sergey},
+  booktitle={Robotics: Science and Systems},
+  year={2018}
+}
+
+%% === MARL Foundations ===
 
 @article{lowe2017multi,
   title={Multi-agent actor-critic for mixed cooperative-competitive environments},
-  author={Lowe, Ryan and Wu, Yi I and Tamar, Aviv and Harb, Jean and Abbeel, Pieter and Mordatch, Igor},
+  author={Lowe, Ryan and Wu, Yi and Tamar, Aviv and Harb, Jean and Abbeel, OpenAI Pieter and Mordatch, Igor},
   journal={Advances in Neural Information Processing Systems},
   volume={30},
   year={2017}
 }
 
-@inproceedings{rashid2018qmix,
-  title={QMIX: Monotonic value function factorisation for deep multi-agent reinforcement learning},
-  author={Rashid, Tabish and Samvelyan, Mikayel and De Witt, Christian Schroeder and Farquhar, Gregory and Foerster, Jakob and Whiteson, Shimon},
+@article{rashid2018qmix,
+  title={QMIX: Monotonic value function factorisation for decentralised multi-agent reinforcement learning},
+  author={Rashid, Tabish and Samvelyan, Mikayel and Schroeder, Christian and Farquhar, Gregory and Foerster, Jakob and Whiteson, Shimon},
   booktitle={International Conference on Machine Learning},
   pages={4295--4304},
   year={2018},
@@ -111,77 +132,228 @@
   year={2018}
 }
 
-% ----------------------------------------------------------------------------
-% Autonomous Driving and MARL
-% ----------------------------------------------------------------------------
-
-@article{shalev2016safe,
-  title={Safe, multi-agent, reinforcement learning for autonomous driving},
-  author={Shalev-Shwartz, Shai and Shammah, Shaked and Shashua, Amnon},
-  journal={arXiv preprint arXiv:1610.03295},
-  year={2016}
+@article{sunehag2017value,
+  title={Value-decomposition networks for cooperative multi-agent learning},
+  author={Sunehag, Peter and Lever, Guy and Gruslys, Audrunas and Czarnecki, Wojciech Marian and Zambaldi, Vinicius and Jaderberg, Max and Lanctot, Marc and Sonnerat, Nicolas and Leibo, Joel Z and Tuyls, Karl and others},
+  journal={arXiv preprint arXiv:1706.05296},
+  year={2017}
 }
 
-@article{zhou2020smarts,
-  title={Smarts: Scalable multi-agent reinforcement learning training school for autonomous driving},
-  author={Zhou, Ming and Luo, Jun and Villella, Julian and Yang, Yaodong and Ruber, David and Tingber, Jiaqi and others},
-  journal={arXiv preprint arXiv:2010.09776},
-  year={2020}
+@article{son2019qtran,
+  title={QTRAN: Learning to factorize with transformation for cooperative multi-agent reinforcement learning},
+  author={Son, Kyunghwan and Kim, Daewoo and Kang, Wan Ju and Hostallero, David Earl and Yi, Yung},
+  booktitle={International Conference on Machine Learning},
+  pages={5887--5896},
+  year={2019},
+  organization={PMLR}
 }
 
-@article{palanisamy2020multi,
-  title={Multi-agent connected autonomous driving using deep reinforcement learning},
-  author={Palanisamy, Praveen},
-  journal={IEEE International Joint Conference on Neural Networks},
-  pages={1--7},
-  year={2020},
-  organization={IEEE}
+@article{yu2022surprising,
+  title={The surprising effectiveness of PPO in cooperative multi-agent games},
+  author={Yu, Chao and Velu, Akash and Vinitsky, Eugene and Gao, Jiaxuan and Wang, Yu and Bayen, Alexandre and Wu, Yi},
+  journal={Advances in Neural Information Processing Systems},
+  volume={35},
+  pages={24611--24624},
+  year={2022}
 }
 
-@article{cao2021cooperative,
-  title={Cooperative autonomous driving: A review of the literature},
-  author={Cao, Zhihua and others},
+@article{zhang2021multi,
+  title={Multi-agent reinforcement learning: A selective overview of theories and algorithms},
+  author={Zhang, Kaiqing and Yang, Zhuoran and Basar, Tamer},
+  journal={Handbook of Reinforcement Learning and Control},
+  pages={321--384},
+  year={2021},
+  publisher={Springer}
+}
+
+@article{oliehoek2016concise,
+  title={A concise introduction to decentralized POMDPs},
+  author={Oliehoek, Frans A and Amato, Christopher},
+  journal={Springer Briefs in Intelligent Systems},
+  year={2016},
+  publisher={Springer}
+}
+
+%% === MARL for Autonomous Driving ===
+
+@article{zhou2020multi,
+  title={Multi-agent reinforcement learning for cooperative lane changing of connected and autonomous vehicles in mixed traffic},
+  author={Zhou, Mofan and Yu, Yang and Qu, Xiaobo},
+  journal={Autonomous Intelligent Systems},
+  volume={2},
+  number={1},
+  pages={1--14},
+  year={2022},
+  publisher={Springer}
+}
+
+@article{shou2020multi,
+  title={Multi-agent coordination for on-ramp merging with deep reinforcement learning},
+  author={Shou, Zijin and Di, Xuan},
   journal={IEEE Transactions on Intelligent Transportation Systems},
-  year={2021}
+  volume={23},
+  number={9},
+  pages={14711--14721},
+  year={2022},
+  publisher={IEEE}
 }
 
-% ----------------------------------------------------------------------------
-% NGSIM Dataset
-% ----------------------------------------------------------------------------
-
-@techreport{ngsim2006,
-  title={Next Generation Simulation (NGSIM) Vehicle Trajectories and Supporting Data},
-  author={{Federal Highway Administration}},
-  institution={U.S. Department of Transportation},
-  year={2006}
+@article{chen2020cooperative,
+  title={Cooperative driving at unsignalized intersections using tree search},
+  author={Chen, Jianyu and Xu, Zhuo and Tomizuka, Masayoshi},
+  journal={IEEE Transactions on Intelligent Transportation Systems},
+  volume={21},
+  number={11},
+  pages={4563--4571},
+  year={2020},
+  publisher={IEEE}
 }
 
-@article{coifman2017critical,
-  title={A critical evaluation of the Next Generation Simulation (NGSIM) vehicle trajectory dataset},
-  author={Coifman, Benjamin and Li, Lizhe},
-  journal={Transportation Research Part B: Methodological},
-  volume={105},
-  pages={362--377},
-  year={2017},
-  publisher={Elsevier}
+@article{chu2019multi,
+  title={Multi-agent deep reinforcement learning for large-scale traffic signal control},
+  author={Chu, Tianshu and Wang, Jie and Codec{\`a}, Lara and Li, Zhaojian},
+  journal={IEEE Transactions on Intelligent Transportation Systems},
+  volume={21},
+  number={3},
+  pages={1086--1095},
+  year={2019},
+  publisher={IEEE}
 }
 
-% ----------------------------------------------------------------------------
-% SUMO Simulation
-% ----------------------------------------------------------------------------
-
-@inproceedings{lopez2018microscopic,
-  title={Microscopic traffic simulation using SUMO},
-  author={Lopez, Pablo Alvarez and Behrisch, Michael and Bieker-Walz, Laura and Erdmann, Jakob and Fl{\"o}tter{\"o}d, Yun-Pang and Hilbrich, Robert and others},
-  booktitle={IEEE International Conference on Intelligent Transportation Systems},
-  pages={2575--2582},
-  year={2018},
-  organization={IEEE}
+@article{haydari2020deep,
+  title={Deep reinforcement learning for intelligent transportation systems: A survey},
+  author={Haydari, Ammar and Yilmaz, Yasin},
+  journal={IEEE Transactions on Intelligent Transportation Systems},
+  volume={23},
+  number={1},
+  pages={11--32},
+  year={2020},
+  publisher={IEEE}
 }
 
-% ----------------------------------------------------------------------------
-% KL Divergence and Constrained RL
-% ----------------------------------------------------------------------------
+@article{li2023reinforcement,
+  title={Reinforcement learning for autonomous driving: A survey},
+  author={Li, Li and Lv, Yisheng and Wang, Fei-Yue},
+  journal={IEEE Transactions on Intelligent Transportation Systems},
+  volume={24},
+  number={6},
+  pages={5921--5940},
+  year={2023},
+  publisher={IEEE}
+}
+
+@article{tang2021highway,
+  title={Highway decision-making and motion planning for autonomous driving via imitation learning},
+  author={Tang, Xiaolin and Yang, Kai and Wang, Hong and others},
+  journal={IEEE Transactions on Intelligent Transportation Systems},
+  volume={22},
+  number={12},
+  pages={7627--7637},
+  year={2021},
+  publisher={IEEE}
+}
+
+%% === Imitation Learning for Driving ===
+
+@article{kuefler2017imitating,
+  title={Imitating driver behavior with generative adversarial networks},
+  author={Kuefler, Alex and Morton, Jeremy and Wheeler, Tim and Kochenderfer, Mykel},
+  booktitle={IEEE Intelligent Vehicles Symposium},
+  pages={204--211},
+  year={2017}
+}
+
+@inproceedings{codevilla2018end,
+  title={End-to-end driving via conditional imitation learning},
+  author={Codevilla, Felipe and M{\"u}ller, Matthias and L{\'o}pez, Antonio and Koltun, Vladlen and Dosovitskiy, Alexey},
+  booktitle={IEEE International Conference on Robotics and Automation},
+  pages={4693--4700},
+  year={2018}
+}
+
+@article{bhattacharyya2022modeling,
+  title={Modeling human driving behavior through generative adversarial imitation learning},
+  author={Bhattacharyya, Raunak P and Phillips, Derek J and Wulfe, Blake and Morton, Jeremy and Kuefler, Alex and Kochenderfer, Mykel J},
+  journal={IEEE Transactions on Intelligent Transportation Systems},
+  volume={24},
+  number={3},
+  pages={2874--2887},
+  year={2022},
+  publisher={IEEE}
+}
+
+@article{wu2023human,
+  title={Human-like autonomous driving: A survey},
+  author={Wu, Zhiyu and Sun, Zichao and Zhang, Ke and Chen, Long},
+  journal={IEEE Transactions on Intelligent Vehicles},
+  volume={8},
+  number={6},
+  pages={3538--3557},
+  year={2023},
+  publisher={IEEE}
+}
+
+%% === Hybrid RL + IL ===
+
+@inproceedings{silver2016mastering,
+  title={Mastering the game of {Go} with deep neural networks and tree search},
+  author={Silver, David and Huang, Aja and Maddison, Chris J and Guez, Arthur and Sifre, Laurent and Van Den Driessche, George and others},
+  journal={Nature},
+  volume={529},
+  number={7587},
+  pages={484--489},
+  year={2016},
+  publisher={Nature Publishing Group}
+}
+
+@inproceedings{hester2018deep,
+  title={Deep {Q}-learning from demonstrations},
+  author={Hester, Todd and Vecerik, Matej and Pietquin, Olivier and Lanctot, Marc and Schaul, Tom and Piot, Bilal and Horgan, Dan and Quan, John and Sendonaris, Andrew and Osband, Ian and others},
+  booktitle={AAAI Conference on Artificial Intelligence},
+  volume={32},
+  number={1},
+  year={2018}
+}
+
+@article{zhu2021survey,
+  title={A survey of deep {RL} and {IL} for autonomous driving policy learning},
+  author={Zhu, Zeyu and Zhao, Huijing},
+  journal={IEEE Transactions on Intelligent Transportation Systems},
+  volume={23},
+  number={9},
+  pages={14043--14065},
+  year={2021},
+  publisher={IEEE}
+}
+
+%% === KL Divergence and Information Theory ===
+
+@book{cover2006elements,
+  title={Elements of Information Theory},
+  author={Cover, Thomas M and Thomas, Joy A},
+  year={2006},
+  edition={2nd},
+  publisher={John Wiley \& Sons}
+}
+
+@article{csiszar1975divergence,
+  title={I-divergence geometry of probability distributions and minimization problems},
+  author={Csisz{\'a}r, Imre},
+  journal={The Annals of Probability},
+  volume={3},
+  number={1},
+  pages={146--158},
+  year={1975}
+}
+
+@article{schulman2015trust,
+  title={Trust region policy optimization},
+  author={Schulman, John and Levine, Sergey and Abbeel, Pieter and Jordan, Michael and Moritz, Philipp},
+  booktitle={International Conference on Machine Learning},
+  pages={1889--1897},
+  year={2015},
+  organization={PMLR}
+}
 
 @article{schulman2017proximal,
   title={Proximal policy optimization algorithms},
@@ -190,42 +362,243 @@
   year={2017}
 }
 
-@inproceedings{peng2019advantage,
-  title={Advantage-weighted regression: Simple and scalable off-policy reinforcement learning},
-  author={Peng, Xue Bin and Kumar, Aviral and Zhang, Grace and Levine, Sergey},
-  booktitle={International Conference on Learning Representations},
-  year={2019}
+%% === Simulation and Datasets ===
+
+@inproceedings{lopez2018microscopic,
+  title={Microscopic traffic simulation using {SUMO}},
+  author={Lopez, Pablo Alvarez and Behrisch, Michael and Bieker-Walz, Laura and Erdmann, Jakob and Fl{\"o}tter{\"o}d, Yun-Pang and Hilbrich, Robert and L{\"u}cken, Leonhard and Rummel, Johannes and Wagner, Peter and Wie{\ss}ner, Evamarie},
+  booktitle={21st International Conference on Intelligent Transportation Systems (ITSC)},
+  pages={2575--2582},
+  year={2018},
+  organization={IEEE}
 }
 
-@article{wu2019behavior,
-  title={Behavior regularized offline reinforcement learning},
-  author={Wu, Yifan and Tucker, George and Nachum, Ofir},
-  journal={arXiv preprint arXiv:1911.11361},
-  year={2019}
+@techreport{ngsim2006,
+  title={{NGSIM} -- Next Generation Simulation},
+  author={{Federal Highway Administration}},
+  institution={U.S. Department of Transportation},
+  year={2006},
+  note={Dataset: Interstate 80 Freeway, Emeryville, CA}
 }
 
-% ----------------------------------------------------------------------------
-% Vehicle-to-Vehicle Communication
-% ----------------------------------------------------------------------------
-
-@article{kenney2011dedicated,
-  title={Dedicated short-range communications (DSRC) standards in the United States},
-  author={Kenney, John B},
-  journal={Proceedings of the IEEE},
-  volume={99},
-  number={7},
-  pages={1162--1182},
-  year={2011},
-  publisher={IEEE}
+@inproceedings{colyar2007us,
+  title={{US} Highway 101 dataset},
+  author={Colyar, James and Halkias, John},
+  booktitle={Federal Highway Administration (FHWA), Tech. Rep. FHWA-HRT-07-030},
+  year={2007}
 }
 
-@article{abboud2016interworking,
-  title={Interworking of DSRC and cellular network technologies for V2X communications: A survey},
-  author={Abboud, Khadige and Omar, Hassan Aboubakr and Zhuang, Weihua},
-  journal={IEEE Transactions on Vehicular Technology},
-  volume={65},
-  number={12},
-  pages={9457--9470},
+@article{thiemann2008estimating,
+  title={Estimating acceleration and lane-changing dynamics from next generation simulation trajectory data},
+  author={Thiemann, Christian and Treiber, Martin and Kesting, Arne},
+  journal={Transportation Research Record},
+  volume={2088},
+  number={1},
+  pages={90--101},
+  year={2008},
+  publisher={SAGE}
+}
+
+@article{montanino2015trajectory,
+  title={Trajectory data reconstruction and simulation-based validation against macroscopic traffic patterns},
+  author={Montanino, Marcello and Punzo, Vincenzo},
+  journal={Transportation Research Part B: Methodological},
+  volume={80},
+  pages={82--106},
+  year={2015},
+  publisher={Elsevier}
+}
+
+%% === Traffic Flow and Car-Following ===
+
+@article{treiber2000congested,
+  title={Congested traffic states in empirical observations and microscopic simulations},
+  author={Treiber, Martin and Hennecke, Ansgar and Helbing, Dirk},
+  journal={Physical Review E},
+  volume={62},
+  number={2},
+  pages={1805},
+  year={2000},
+  publisher={APS}
+}
+
+@article{kesting2007general,
+  title={General lane-changing model {MOBIL} for car-following models},
+  author={Kesting, Arne and Treiber, Martin and Helbing, Dirk},
+  journal={Transportation Research Record},
+  volume={1999},
+  number={1},
+  pages={86--94},
+  year={2007},
+  publisher={SAGE}
+}
+
+%% === Safety in RL ===
+
+@article{garcia2015comprehensive,
+  title={A comprehensive survey on safe reinforcement learning},
+  author={Garcia, Javier and Fernandez, Fernando},
+  journal={Journal of Machine Learning Research},
+  volume={16},
+  number={1},
+  pages={1437--1480},
+  year={2015}
+}
+
+@article{feng2021dense,
+  title={Dense reinforcement learning for safety validation of autonomous vehicles},
+  author={Feng, Shuo and Sun, Haowei and Yan, Xintao and Zhu, Haojie and Zou, Zhengxia and Shen, Shengyin and Liu, Henry X},
+  journal={Nature},
+  volume={615},
+  number={7953},
+  pages={620--627},
+  year={2023},
+  publisher={Nature Publishing Group}
+}
+
+%% === Cooperative Driving ===
+
+@article{letter2019efficient,
+  title={Efficient control of fully automated connected vehicles at freeway merge segments},
+  author={Letter, Cornelie and Elefteriadou, Lily},
+  journal={Transportation Research Part C: Emerging Technologies},
+  volume={80},
+  pages={190--205},
+  year={2017},
+  publisher={Elsevier}
+}
+
+@article{rios2016automated,
+  title={Automated and cooperative vehicle merging at highway on-ramps},
+  author={Rios-Torres, Jackeline and Malikopoulos, Andreas A},
+  journal={IEEE Transactions on Intelligent Transportation Systems},
+  volume={18},
+  number={4},
+  pages={780--789},
   year={2016},
   publisher={IEEE}
 }
+
+@article{wang2021cooperative,
+  title={Cooperative autonomous driving for traffic congestion avoidance through vehicle-to-vehicle communications},
+  author={Wang, Ziran and Wu, Guoyuan and Barth, Matthew J},
+  journal={IEEE Vehicular Technology Magazine},
+  volume={17},
+  number={1},
+  pages={60--67},
+  year={2021},
+  publisher={IEEE}
+}
+
+@article{guanetti2018control,
+  title={Control of connected and automated vehicles: State of the art and future challenges},
+  author={Guanetti, Jacopo and Kim, Yeojun and Borrelli, Francesco},
+  journal={Annual Reviews in Control},
+  volume={45},
+  pages={18--40},
+  year={2018},
+  publisher={Elsevier}
+}
+
+%% === Deep RL Foundations ===
+
+@article{mnih2015human,
+  title={Human-level control through deep reinforcement learning},
+  author={Mnih, Volodymyr and Kavukcuoglu, Koray and Silver, David and Rusu, Andrei A and Veness, Joel and Bellemare, Marc G and others},
+  journal={Nature},
+  volume={518},
+  number={7540},
+  pages={529--533},
+  year={2015},
+  publisher={Nature Publishing Group}
+}
+
+@article{lillicrap2015continuous,
+  title={Continuous control with deep reinforcement learning},
+  author={Lillicrap, Timothy P and Hunt, Jonathan J and Pritzel, Alexander and Heess, Nicolas and Erez, Tom and Tassa, Yuval and Silver, David and Wierstra, Daan},
+  booktitle={International Conference on Learning Representations},
+  year={2016}
+}
+
+%% === Highway Exit Studies ===
+
+@article{munoz2003diagnosis,
+  title={Diagnosis and prediction of traffic congestion at highway off-ramps},
+  author={Mu{\~n}oz, Juan Carlos and Daganzo, Carlos F},
+  journal={Transportation Research Part C: Emerging Technologies},
+  volume={11},
+  number={2},
+  pages={195--213},
+  year={2003},
+  publisher={Elsevier}
+}
+
+@article{sarker2020connected,
+  title={Connected and autonomous vehicles at freeway merge sections: Trajectory optimization and capacity analysis},
+  author={Sarker, Avijit and Shen, Haiying and Rahman, Mohammad Saiedur and Chowdhury, Mashrur and Dey, Kakan and Li, Fengjiao and Wang, Yan and Narman, Husnu S},
+  journal={Journal of Advanced Transportation},
+  volume={2020},
+  year={2020},
+  publisher={Hindawi}
+}
+
+@techreport{nhtsa2021traffic,
+  title={Traffic Safety Facts: Critical Reasons for Crashes Investigated in the National Motor Vehicle Crash Causation Survey},
+  author={{National Highway Traffic Safety Administration}},
+  institution={U.S. Department of Transportation},
+  year={2021},
+  number={DOT HS 812 506}
+}
+
+%% === Reward Shaping ===
+
+@inproceedings{ng1999policy,
+  title={Policy invariance under reward transformations: Theory and application to reward shaping},
+  author={Ng, Andrew Y and Harada, Daishi and Russell, Stuart},
+  booktitle={ICML},
+  pages={278--287},
+  year={1999}
+}
+
+@inproceedings{brys2015reinforcement,
+  title={Reinforcement learning from demonstration through shaping},
+  author={Brys, Tim and Harutyunyan, Anna and Suay, Halit Bener and Chernova, Sonia and Taylor, Matthew E and Now{\'e}, Ann},
+  booktitle={Twenty-Fourth International Joint Conference on Artificial Intelligence},
+  year={2015}
+}
+
+%% === Mixed Autonomy ===
+
+@article{wu2021flow,
+  title={Flow: A modular learning framework for mixed autonomy traffic},
+  author={Wu, Cathy and Kreidieh, Abdul Rahman and Parvate, Kanaad and Vinitsky, Eugene and Bayen, Alexandre M},
+  journal={IEEE Transactions on Robotics},
+  volume={38},
+  number={2},
+  pages={1270--1286},
+  year={2021},
+  publisher={IEEE}
+}
+
+%% === Actor-Critic Convergence Theory ===
+
+@article{konda2003onactor,
+  title={On actor-critic algorithms},
+  author={Konda, Vijay R and Tsitsiklis, John N},
+  journal={SIAM Journal on Control and Optimization},
+  volume={42},
+  number={4},
+  pages={1143--1166},
+  year={2003},
+  publisher={SIAM}
+}
+
+@inproceedings{kumar2019stabilizing,
+  title={Stabilizing off-policy {Q}-learning via bootstrapping error reduction},
+  author={Kumar, Aviral and Fu, Justin and Soh, Matthew and Tucker, George and Levine, Sergey},
+  booktitle={Advances in Neural Information Processing Systems},
+  volume={32},
+  year={2019}
+}
+
+%% End of CALM references
