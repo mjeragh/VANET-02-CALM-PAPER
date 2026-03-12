@@ -385,6 +385,15 @@ All experiments use 5 agents ($n=5$), discount factor $\gamma = 0.99$, soft upda
 
 We present results from our 25-run statistical study (5 methods $\times$ 5 seeds), evaluating each method on NGSIM action agreement, behavioral similarity, action entropy, and task reward.
 
+Fig.~\ref{fig:learning_curves} shows the training reward curves for all methods. CALM converges to the highest reward ($\sim$1.35) within 150 episodes and maintains stable performance. QMIX-CALM converges faster (within 50 episodes) to a slightly lower reward ($\sim$1.0). DAgger, as a supervised method, plateaus quickly at its lower reward level ($\sim$0.44) within 20 episodes. The entropy-only baseline exhibits high variance across seeds, reflecting its instability. Each method was trained for its convergence-appropriate horizon: DAgger for 50 episodes, QMIX-CALM for 100, and CALM, GAIL, and entropy-only for 300.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{figures/learning_curves.pdf}
+    \caption{Training reward curves for all methods (mean $\pm$ std across 5 seeds, smoothed with a 10-episode moving average). CALM achieves the highest final reward while maintaining stable convergence.}
+    \label{fig:learning_curves}
+\end{figure}
+
 \subsection{NGSIM Action Agreement}
 
 Table~\ref{tab:agreement} summarizes the performance of all methods on the four evaluation metrics. The results reveal a clear hierarchy in human-likeness: DAgger achieves the highest NGSIM agreement at $45.3\% \pm 0.9\%$, followed by QMIX-CALM at $40.1\% \pm 2.3\%$, with CALM and GAIL achieving similar agreement around $34\%$.
