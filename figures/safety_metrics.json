@@ -1,0 +1,72 @@
+{
+  "calm_maddpg": {
+    "label": "CALM",
+    "collision_rate": 0.0,
+    "collision_mean": 0.0,
+    "collision_std": 0.0,
+    "exit_success_rate": 0.3333333333333333,
+    "exit_success_mean": 1.0,
+    "exit_success_std": 0.0,
+    "avg_speed_mean": 25.803540184008252,
+    "avg_speed_std": 1.1717657453196302,
+    "near_miss_mean": 42.51,
+    "near_miss_std": 20.109448028227924,
+    "n_episodes": 100
+  },
+  "dagger": {
+    "label": "DAgger",
+    "collision_rate": 0.0,
+    "collision_mean": 0.0,
+    "collision_std": 0.0,
+    "exit_success_rate": 0.07666666666666667,
+    "exit_success_mean": 0.23,
+    "exit_success_std": 0.4208325082500163,
+    "avg_speed_mean": 11.019873419273944,
+    "avg_speed_std": 3.636279358264239,
+    "near_miss_mean": 3150.51,
+    "near_miss_std": 1934.6115139479555,
+    "n_episodes": 100
+  },
+  "entropy_only": {
+    "label": "Entropy-only",
+    "collision_rate": 0.0,
+    "collision_mean": 0.0,
+    "collision_std": 0.0,
+    "exit_success_rate": 0.19999999999999998,
+    "exit_success_mean": 0.6,
+    "exit_success_std": 0.4898979485566357,
+    "avg_speed_mean": 16.30883020195482,
+    "avg_speed_std": 6.090864377759752,
+    "near_miss_mean": 685.39,
+    "near_miss_std": 951.5159998129301,
+    "n_episodes": 100
+  },
+  "gail_ngsim": {
+    "label": "GAIL",
+    "collision_rate": 0.0,
+    "collision_mean": 0.0,
+    "collision_std": 0.0,
+    "exit_success_rate": 0.06666666666666667,
+    "exit_success_mean": 0.2,
+    "exit_success_std": 0.4,
+    "avg_speed_mean": 8.056163063314347,
+    "avg_speed_std": 2.1570638775557303,
+    "near_miss_mean": 2563.81,
+    "near_miss_std": 869.2477977538971,
+    "n_episodes": 100
+  },
+  "qmix_calm": {
+    "label": "QMIX-CALM",
+    "collision_rate": 0.0,
+    "collision_mean": 0.0,
+    "collision_std": 0.0,
+    "exit_success_rate": 0.26666666666666666,
+    "exit_success_mean": 0.8,
+    "exit_success_std": 0.4,
+    "avg_speed_mean": 19.690973246457546,
+    "avg_speed_std": 6.8535021672605465,
+    "near_miss_mean": 220.86,
+    "near_miss_std": 376.12537856411655,
+    "n_episodes": 100
+  }
+}

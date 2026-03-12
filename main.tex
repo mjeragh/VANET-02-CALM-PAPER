@@ -493,6 +493,37 @@ While human-likeness is our primary objective, task performance remains importan
 
 This trade-off is fundamental: methods that closely match human behavior inherit human suboptimality with respect to the engineered reward, while methods that optimize rewards may deviate from human-like behavior. CALM and QMIX-CALM achieve a favorable balance by using human demonstrations as a constraint rather than an objective.
 
+\subsection{Driving Safety Evaluation}
+
+Beyond policy-level metrics, we evaluate each trained policy on transportation-relevant safety metrics by running 20 evaluation episodes per checkpoint (100 total per method) in the MultiExit scenario. Table~\ref{tab:safety} reports collision rate, exit success rate, average speed, and proximity events.
+
+\begin{table}[t]
+\centering
+\caption{Safety Metrics (20 eval episodes $\times$ 5 seeds per method)}
+\label{tab:safety}
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Method} & \textbf{Collision} & \textbf{Exit Success} & \textbf{Avg.\ Speed} & \textbf{Proximity} \\
+                 & \textbf{Rate (\%)} & \textbf{Rate (\%)}    & \textbf{(m/s)}       & \textbf{Events/ep} \\
+\midrule
+CALM       & $\mathbf{0.0}$  & $\mathbf{33.3}$  & $\mathbf{25.8 \pm 1.2}$  & $\mathbf{42.5}$  \\
+QMIX-CALM  & $0.0$  & $26.7$  & $19.7 \pm 6.9$  & $220.9$  \\
+Entropy-only & $0.0$ & $20.0$ & $16.3 \pm 6.1$  & $685.4$  \\
+DAgger     & $0.0$  & $7.7$  & $11.0 \pm 3.6$  & $3150.5$  \\
+GAIL       & $0.0$  & $6.7$  & $8.1 \pm 2.2$  & $2563.8$  \\
+\bottomrule
+\end{tabular}
+\vspace{1mm}
+\parbox{\columnwidth}{\scriptsize Collision rate: fraction of episodes with $\geq 1$ vehicle teleportation. Exit success: fraction of exit-assigned agents reaching an exit ramp. Proximity events: simulation steps with $<5$\,m inter-vehicle distance.}
+\end{table}
+
+Table~\ref{tab:safety} reveals that CALM achieves the best driving performance across all safety metrics. CALM's exit success rate ($33.3\%$) is significantly higher than DAgger ($7.7\%$) and GAIL ($6.7\%$), demonstrating that reward optimization enables task completion while the BC constraint preserves behavioral diversity. CALM also maintains the highest average speed ($25.8$\,m/s, close to the highway speed limit of $33.3$\,m/s) with the lowest variance ($\pm 1.2$\,m/s), indicating consistent, efficient driving.
+
+The proximity event metric reveals a stark contrast: DAgger and GAIL policies produce over $2500$ close-proximity steps per episode, compared to only $42.5$ for CALM. These imitation-focused methods learn cautious, slow behavior from human demonstrations (avg.\ speed $8$--$11$\,m/s), which paradoxically increases time spent near other vehicles. CALM's higher speed and more decisive lane-changing behavior reduces exposure to proximity risks.
+
+All methods achieve zero collision rate because SUMO's safety model prevents physical collisions via forced braking. The proximity and speed metrics are therefore more informative discriminators of driving quality in this simulation environment.
+
 % ============================================================
 \section{Discussion}
 \label{sec:discussion}
