@@ -1,37 +1,24 @@
-# CALM: Constrained Action Learning for Multi-agents
+# CALM: Constrained Actor-Learning from deMonstrations
 
-**Full Title:** Preventing Mode Collapse in Multi-Agent Reinforcement Learning for Cooperative Autonomous Driving
+**Full Title:** CALM: Constrained Actor-Learning from Demonstrations for Mode Collapse Prevention in Multi-Agent Cooperative Driving
 
-**Target Journal:** IEEE Transactions on Intelligent Transportation Systems (T-ITS)
-- Impact Factor: ~8.5 (Q1)
-- Scope: Intelligent transportation, autonomous vehicles, machine learning
+**Target Journal:** IEEE Transactions on Intelligent Vehicles (T-IV)
+- Impact Factor: ~8.2 (Q1)
+- Scope: Intelligent vehicles, cooperative driving, autonomous systems
 
 **Authors:**
-- Dr. Mohammad Jeragh (Corresponding Author)
-- Dr. Ibrahim Alrashed
+- Dr. Mohammad Jeragh (Corresponding Author) — mohammad.jeragh@ku.edu.kw
+- Dr. Ebrahim Alrashed — ebrahim.alrashed@ku.edu.kw
 
 **Affiliation:** Computer Engineering Department, College of Engineering and Petroleum, Kuwait University
+
+**Status:** Pre-submission — reviewer-ready fixes applied, experimental work remaining
 
 ---
 
 ## Abstract
 
-Mode collapse is a critical challenge in multi-agent reinforcement learning (MARL) for autonomous driving, where trained policies converge to repetitive, non-diverse behaviors. This paper presents CALM (Constrained Action Learning for Multi-agents), a novel hybrid approach combining behavioral cloning with reinforcement learning through KL divergence regularization. Using 47,874 human driving samples from the NGSIM dataset, CALM prevents mode collapse while maintaining task performance. Experiments on cooperative highway exit scenarios demonstrate that CALM achieves 35.22% action agreement with human drivers and 74.07% behavioral similarity, significantly outperforming entropy-regularization-only approaches (22.74% agreement). The decaying KL constraint enables smooth transition from imitation to optimization, producing diverse, human-like driving behaviors.
-
----
-
-## Paper Structure
-
-```
-1. Introduction
-2. Related Work
-3. Problem Formulation
-4. CALM: Proposed Method
-5. Experimental Setup
-6. Results
-7. Discussion
-8. Conclusion
-```
+Mode collapse is a critical challenge in MARL for autonomous driving, where policies converge to a single repeated action. CALM prevents this through BC pre-training on NGSIM data followed by RL fine-tuning with a decaying KL-divergence constraint. In a 25-run study (5 methods x 5 seeds), DAgger achieves highest NGSIM agreement (45.3%), while CALM achieves highest reward (1.35) with entropy 0.88, eliminating mode collapse.
 
 ---
 
@@ -40,16 +27,31 @@ Mode collapse is a critical challenge in multi-agent reinforcement learning (MAR
 ```
 VANET-02-CALM-PAPER/
 ├── README.md              # This file
-├── .gitignore            # Git ignore patterns
-├── main.tex              # Main LaTeX document
-├── references.bib        # Bibliography
-├── figures/              # Publication figures
-│   ├── architecture.png
-│   ├── action_distribution.png
-│   ├── ablation.png
-│   └── scalability.png
-└── sections/             # LaTeX sections (if modular)
+├── SUBMISSION_STATUS.md   # Submission readiness and remaining work
+├── main.tex               # Main LaTeX document (IEEEtran, 8 pages)
+├── references.bib         # Bibliography (38 cited, ~61 total entries)
+├── main.pdf               # Compiled PDF
+└── figures/
+    ├── method_comparison.pdf
+    ├── significance_heatmap.pdf
+    ├── action_agreement.pdf
+    ├── action_entropy.pdf
+    └── reward_comparison.pdf
 ```
+
+---
+
+## Key Results (Current)
+
+| Method | Agreement | Similarity | Entropy | Reward |
+|--------|-----------|-----------|---------|--------|
+| MADDPG (unconstrained) | 54.8%* | 68.0% | 0.003 | 0.96 |
+| DAgger | **45.3% ± 0.9%** | **98.1%** | 0.63 | 0.44 |
+| QMIX-CALM | 40.1% ± 2.3% | 75.8% | 0.70 | 1.01 |
+| CALM | 34.0% ± 1.2% | 74.1% | 0.88 | **1.35** |
+| Entropy-only | 14.6% ± 23.8% | 39.2% | 0.06 | 0.97 |
+
+*54.8% is a mode-collapse artifact — 99.7% "Maintain" matches the dominant NGSIM action
 
 ---
 
@@ -57,42 +59,17 @@ VANET-02-CALM-PAPER/
 
 | Repository | Purpose |
 |------------|---------|
-| [VANET](https://github.com/mjeragh/VANET) | Main codebase (experiments, SUMO, MARL agents) |
-| [VANET-journal-paper](https://github.com/mjeragh/coex-journal-paper) | CoEx paper (Phase 1, under review at T&F) |
-| **This repo** | CALM paper (Phase 2, in preparation for T-ITS) |
+| [VANET](https://github.com/mjeragh/VANET) | Simulator codebase (SUMO, MARL agents, experiments) |
+| [VANET-journal-paper](https://github.com/mjeragh/coex-journal-paper) | CoEx paper (submitted to JITS, MS #269158218) |
+| **This repo** | CALM paper (targeting IEEE T-IV) |
 
 ---
 
-## Collaboration
+## Branch Structure
 
-This repository syncs with Overleaf for collaborative editing.
-
-**Overleaf Project:** (To be linked)
-
----
-
-## Timeline
-
-| Week | Milestone |
-|------|-----------|
-| 1 | GAIL baseline implementation |
-| 2 | DAgger baseline implementation |
-| 3 | Ablation studies |
-| 4 | Scalability experiments |
-| 5 | Statistical analysis (5 seeds) |
-| 6 | Theory + Draft v1 |
-| 7 | Full draft |
-| 8 | Submission |
+- `master` — Last stable draft (Week 8 final polish)
+- `fix/reviewer-ready-calm-paper` — **Active branch** with reviewer-ready text fixes (current)
 
 ---
 
-## Key Results (Current)
-
-| Method | Agreement | Similarity | Mode Collapse |
-|--------|-----------|------------|---------------|
-| Entropy-only | 22.74% | 55.74% | Yes (100% Decel) |
-| **CALM** | **35.22%** | **74.07%** | **No** |
-
----
-
-**Last Updated:** January 19, 2026
+**Last Updated:** March 12, 2026
