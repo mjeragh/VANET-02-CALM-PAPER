@@ -1,7 +1,7 @@
 % ============================================================
 % CALM: Constrained Actor-Learning from Demonstrations for
 % Mode Collapse Prevention in Multi-Agent Cooperative Driving
-% Target: IEEE Transactions on Intelligent Transportation Systems
+% Target: IEEE Transactions on Intelligent Vehicles
 % ============================================================
 
 \documentclass[journal]{IEEEtran}
@@ -36,7 +36,7 @@
 \title{CALM: Constrained Actor-Learning from Demonstrations for Mode Collapse Prevention in Multi-Agent Cooperative Driving}
 
 \author{
-\IEEEauthorblockN{Mohammad Jeragh and ebrahim Alrashed}
+\IEEEauthorblockN{Mohammad Jeragh and Ebrahim Alrashed}
 \IEEEauthorblockA{Department of Computer Engineering\\
 College of Engineering and Petroleum\\
 Kuwait University, Kuwait\\
@@ -49,10 +49,10 @@ Kuwait University, Kuwait\\
 \begin{abstract}
 Multi-agent reinforcement learning (MARL) offers a promising framework for cooperative highway driving, yet deployed policies frequently collapse to a single repeated action---a phenomenon termed \emph{mode collapse}---that undermines both safety and human-likeness.
 We present CALM (Constrained Actor-Learning from deMonstrations), a hybrid imitation-reinforcement learning algorithm that prevents mode collapse through behavioral cloning (BC) pre-training followed by RL fine-tuning with a decaying KL-divergence constraint anchored to the BC prior.
-We provide theoretical analysis showing that the KL constraint yields a provable entropy lower bound during training (Theorem~1), preventing policy degeneration while still allowing reward-driven improvement.
+We analyze properties of the KL constraint showing how it controls divergence from human demonstrations and maintains action diversity during training.
 We evaluate CALM and four baselines---DAgger, GAIL, entropy-regularized MADDPG, and QMIX-CALM---on a cooperative highway exit coordination task validated against the NGSIM naturalistic driving dataset.
 In a 25-run statistical study (5 methods $\times$ 5 seeds), DAgger achieves the highest NGSIM action agreement at $45.3\% \pm 0.9\%$ ($p < 0.001$ vs.\ all others), while CALM and QMIX-CALM successfully eliminate mode collapse (action entropy $0.70$--$0.88$ vs.\ $0.06$ for entropy-only baseline) and achieve the highest RL rewards ($1.35 \pm 0.05$).
-Our results demonstrate that anchoring MARL policies to human demonstrations via decaying KL regularization is an effective and theoretically grounded strategy for producing diverse, human-like cooperative driving behaviors.
+Our results demonstrate that anchoring MARL policies to human demonstrations via decaying KL regularization is an effective strategy for producing diverse, human-like cooperative driving behaviors.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -83,12 +83,10 @@ In this paper, we present CALM (Constrained Actor-Learning from deMonstrations),
 \begin{enumerate}
     \item \textbf{CALM Algorithm:} We propose a two-phase approach combining BC pre-training on NGSIM human driving data with MADDPG fine-tuning under a decaying KL-divergence constraint. The constraint anchors the policy to the BC prior during early training and gradually relaxes, allowing reward-driven improvement without mode collapse.
 
-    \item \textbf{Theoretical Analysis:} We prove that the KL constraint provides a bounded divergence from the BC prior (Theorem~\ref{thm:kl_bound}) and, via Pinsker's inequality, an entropy lower bound that prevents degenerate policies (Proposition~\ref{prop:entropy_bound}). We also show asymptotic convergence under standard assumptions (Proposition~\ref{prop:convergence}).
-
-    \item \textbf{Systematic Empirical Study:} We conduct a 25-run statistical study comparing five mode-collapse mitigation strategies (CALM, DAgger, GAIL, entropy-only, QMIX-CALM) on cooperative highway exit coordination, validated against the NGSIM naturalistic driving dataset with rigorous significance testing.
+    \item \textbf{Systematic Empirical Study:} We conduct a 25-run statistical study comparing five mode-collapse mitigation strategies (CALM, DAgger, GAIL, entropy-only, QMIX-CALM) on cooperative highway exit coordination, validated against the NGSIM naturalistic driving dataset with rigorous significance testing. We additionally analyze the properties of the decaying KL constraint, showing how it controls divergence from human demonstrations during training.
 \end{enumerate}
 
-The remainder of this paper is organized as follows: Section~\ref{sec:related} reviews related work. Section~\ref{sec:formulation} formalizes the cooperative driving problem and defines mode collapse. Section~\ref{sec:method} presents the CALM algorithm and theoretical analysis. Section~\ref{sec:setup} describes the experimental setup. Section~\ref{sec:results} presents results. Section~\ref{sec:discussion} discusses findings. Section~\ref{sec:conclusion} concludes.
+The remainder of this paper is organized as follows: Section~\ref{sec:related} reviews related work. Section~\ref{sec:formulation} formalizes the cooperative driving problem and defines mode collapse. Section~\ref{sec:method} presents the CALM algorithm and analyzes the KL constraint. Section~\ref{sec:setup} describes the experimental setup. Section~\ref{sec:results} presents results. Section~\ref{sec:discussion} discusses findings. Section~\ref{sec:conclusion} concludes.
 
 % ============================================================
 \section{Related Work}
@@ -209,7 +207,7 @@ After BC pre-training, we store a frozen copy $\pi_{\text{BC}}$ of the policy pa
 
 \subsection{Phase 2: Constrained RL Fine-Tuning}
 
-During RL fine-tuning via MADDPG~\cite{lowe2017multi}, we augment the standard policy gradient objective with a KL-divergence penalty anchored to the BC prior:
+Since our action space is discrete, we adapt MADDPG to output categorical action probabilities via a temperature-scaled softmax over logits: $\pi_{\theta_i}(a|o) = \text{softmax}(z_i(o)/\tau)$, where $z_i$ are the actor network outputs and $\tau$ is a temperature parameter. Actions are sampled from the resulting categorical distribution during training and selected via argmax at evaluation. During RL fine-tuning, we augment the standard policy gradient objective with a KL-divergence penalty anchored to the BC prior:
 \begin{equation}
     \mathcal{L}_{\text{CALM}}(\theta_i) = -J_{\text{PG}}(\theta_i) + \lambda(t) \cdot D_{\KL}\!\left(\pi_{\theta_i} \,\|\, \pi_{\text{BC}}\right)
     \label{eq:calm_loss}
@@ -230,21 +228,21 @@ The intuition is as follows: early in training, $\lambda(t)$ is large, strongly 
 
 \subsection{CALM with QMIX (QMIX-CALM)}
 
-We also instantiate CALM with the QMIX~\cite{rashid2018qmix} value decomposition architecture. In QMIX-CALM, the BC pre-training initializes a policy network that is used for $\epsilon$-greedy action selection. The KL penalty is applied as an auxiliary loss during policy updates:
+We also instantiate CALM with the QMIX~\cite{rashid2018qmix} value decomposition architecture. In QMIX-CALM, each agent's individual Q-network produces per-action Q-values, which are combined through the QMIX monotonic mixing network to produce $Q_{\text{tot}}$. To apply the KL penalty, we derive implicit action probabilities from the Q-values via temperature-scaled softmax: $\pi_{\theta_i}(a|o) = \text{softmax}(Q_i(o, \cdot)/\tau)$. A frozen copy of the BC-pretrained Q-networks serves as the reference distribution. The combined loss is:
 \begin{equation}
-    \mathcal{L}_{\text{QMIX-CALM}} = \mathcal{L}_{\text{QMIX}} + \lambda(t) \cdot D_{\KL}\!\left(\pi_{\theta} \,\|\, \pi_{\text{BC}}\right)
+    \mathcal{L}_{\text{QMIX-CALM}} = \mathcal{L}_{\text{QMIX}} + \lambda(t) \cdot \frac{1}{n}\sum_{i=1}^{n} D_{\KL}\!\left(\pi_{\theta_i} \,\|\, \pi_{\text{BC},i}\right)
 \end{equation}
-where $\mathcal{L}_{\text{QMIX}}$ is the standard QMIX temporal-difference loss.
+where $\mathcal{L}_{\text{QMIX}}$ is the standard QMIX temporal-difference loss and the KL penalty is averaged over agents. Gradients from the KL term flow through the individual Q-networks but not through the frozen BC reference networks.
 
-\subsection{Theoretical Analysis}
+\subsection{Analysis of the KL Constraint}
 
-We now provide theoretical guarantees for CALM's ability to prevent mode collapse.
+We analyze key properties of the CALM objective that explain its effectiveness in preventing mode collapse.
 
 \begin{theorem}[KL Divergence Bound]
 \label{thm:kl_bound}
 Consider the CALM objective~\eqref{eq:calm_loss} with decay schedule~\eqref{eq:lambda_decay}. Let $\pi_t^*$ denote the policy that minimizes $\mathcal{L}_{\text{CALM}}$ at episode $t$. If the RL objective is bounded as $|J_{\text{PG}}(\theta)| \leq J_{\max}$ for all $\theta$, then:
 \begin{equation}
-    D_{\KL}\!\left(\pi_t^* \,\|\, \pi_{\text{BC}}\right) \leq \frac{J_{\max}}{\lambda(t)} = \frac{J_{\max}}{\lambda_0 \cdot \delta^t}.
+    D_{\KL}\!\left(\pi_t^* \,\|\, \pi_{\text{BC}}\right) \leq \frac{2J_{\max}}{\lambda(t)} = \frac{2J_{\max}}{\lambda_0 \cdot \delta^t}.
     \label{eq:kl_bound}
 \end{equation}
 \end{theorem}
@@ -263,7 +261,7 @@ Rearranging and using $|J_{\text{PG}}(\theta)| \leq J_{\max}$:
 \begin{equation}
     \lambda(t) D_{\KL}(\pi_t^* \| \pi_{\text{BC}}) \leq J_{\text{PG}}(\pi_t^*) - J_{\text{PG}}(\pi_{\text{BC}}) \leq 2J_{\max}.
 \end{equation}
-Dividing both sides by $\lambda(t) > 0$ gives the result (with constant factor absorbed into $J_{\max}$).
+Dividing both sides by $\lambda(t) > 0$ gives the result.
 \end{proof}
 
 \begin{remark}
@@ -277,7 +275,7 @@ Let $\pi_{\text{BC}}$ have expected entropy $\E[\mathcal{H}(\pi_{\text{BC}}(\cdo
     \E\left[\mathcal{H}(\pi_t^*(\cdot|o))\right] \geq h_0 - \sqrt{2 B(t)} \cdot \log|\cA|
     \label{eq:entropy_bound}
 \end{equation}
-where $|\cA| = 5$ is the action space size and $B(t) = J_{\max}/\lambda(t)$.
+where $|\cA| = 5$ is the action space size and $B(t) = 2J_{\max}/\lambda(t)$.
 \end{proposition}
 
 \begin{proof}
@@ -297,17 +295,10 @@ where we use the uniform continuity of entropy~\cite{cover2006elements}. Taking 
 \end{proof}
 
 \begin{remark}
-With our experimental parameters ($h_0 = 0.88 \cdot \log 5 \approx 1.42$ nats, $|\cA|=5$, $J_{\max} \approx 2$, $\lambda_0 = 2.0$), the entropy bound at episode $t=0$ gives $\mathcal{H}(\pi_0^*) \geq 1.42 - \sqrt{2} \cdot \log 5 \approx -0.86$, which is vacuous. However, the bound becomes informative as $\lambda$ dominates the loss: empirically, we observe entropy $\geq 0.80$ (normalized) throughout CALM training, consistent with the constraint preventing collapse.
+Empirically, we observe normalized entropy $\geq 0.80$ throughout CALM training, consistent with the KL constraint preventing collapse. The bound~\eqref{eq:entropy_bound} becomes tighter as $\lambda(t)$ increases relative to $J_{\max}$, providing a principled explanation for why the decaying schedule preserves action diversity during the critical early training phase.
 \end{remark}
 
-\begin{proposition}[Asymptotic Convergence]
-\label{prop:convergence}
-Under standard assumptions for actor-critic convergence~\cite{konda2003onactor}---bounded gradients, diminishing step sizes satisfying Robbins-Monro conditions, and ergodic Markov chains---the CALM policy converges to a stationary point of the RL objective $J_{\text{PG}}$ as $t \to \infty$.
-\end{proposition}
-
-\begin{proof}[Proof Sketch]
-As $t \to \infty$, the decay schedule yields $\lambda(t) = \lambda_0 \delta^t \to 0$, so the CALM objective~\eqref{eq:calm_loss} approaches the pure RL objective. Since the KL regularizer is smooth and bounded, it satisfies the conditions for a vanishing perturbation to the policy gradient. By Theorem~2 of Konda and Tsitsiklis~\cite{konda2003onactor}, the actor-critic iterates converge almost surely to the set of stationary points of $J_{\text{PG}}$ under the stated step-size conditions. The BC regularization term acts as a time-varying bias that vanishes asymptotically, preserving convergence guarantees.
-\end{proof}
+Note that as $t \to \infty$, the decay schedule yields $\lambda(t) \to 0$, so the CALM objective~\eqref{eq:calm_loss} approaches the pure RL objective. This ensures that the BC constraint does not permanently restrict the policy from improving beyond the demonstrator.
 
 \subsection{Algorithm Summary}
 
@@ -360,7 +351,7 @@ We evaluate CALM on a cooperative highway exit coordination task using the SUMO 
 
 \subsection{NGSIM Dataset}
 
-We use the NGSIM Interstate~80 dataset~\cite{ngsim2006} collected at Emeryville, California. Following Thiemann et al.~\cite{thiemann2008estimating}, we extract vehicle trajectories and discretize continuous actions into our five-action space based on acceleration and lane-change thresholds. The resulting dataset contains approximately 50,000 state-action pairs used for BC pre-training and DAgger expert queries.
+We use the NGSIM Interstate~80 dataset~\cite{ngsim2006} collected at Emeryville, California. Following Thiemann et al.~\cite{thiemann2008estimating}, we extract vehicle trajectories and discretize continuous actions into our five-action space using the following thresholds: lane changes are detected when the lateral lane index changes by more than $\pm 0.5$ lanes between consecutive timesteps (mapping to \emph{Lane\_Left} or \emph{Lane\_Right}); longitudinal acceleration above $+0.5$~m/s$^2$ maps to \emph{Accelerate}, below $-0.5$~m/s$^2$ to \emph{Decelerate}, and the remainder to \emph{Maintain}. Lane changes take priority over acceleration actions. The resulting dataset contains approximately 50,000 state-action pairs used for BC pre-training and DAgger expert queries.
 
 \subsection{Baselines}
 
@@ -400,7 +391,9 @@ Table~\ref{tab:agreement} summarizes the performance of all methods on the four 
 
 The agreement rates should be interpreted in context: random action selection would yield $20\%$ agreement (1 in 5 actions), while perfect human mimicry is unattainable due to inherent stochasticity in human driving decisions. The rule-based baseline achieves only $25.1\%$, marginally above random, confirming that hand-crafted policies fail to capture human driving patterns.
 
-Notably, the entropy-only baseline achieves only $14.6\% \pm 23.8\%$ agreement---\emph{worse than random}---with extremely high variance across seeds. This counter-intuitive result occurs because entropy regularization alone cannot prevent mode collapse when the RL reward signal dominates; some seeds collapse to near-deterministic policies that happen to disagree with human actions.
+Notably, unconstrained MADDPG achieves $54.8\%$ agreement---\emph{superficially the highest}---but this is an artifact of mode collapse: the policy selects ``Maintain'' $99.7\%$ of the time (entropy $= 0.003$), which happens to match the most frequent human action in NGSIM ($\sim$55\% Maintain). The similarity score ($68.0\%$) and near-zero entropy reveal that this agreement is spurious, as the policy completely fails to reproduce any other human driving behavior. This illustrates why action agreement alone is an insufficient metric and must be interpreted alongside entropy and distributional similarity.
+
+The entropy-only baseline achieves only $14.6\% \pm 23.8\%$ agreement---\emph{worse than random}---with extremely high variance across seeds. This occurs because entropy regularization alone cannot prevent mode collapse when the RL reward signal dominates; some seeds collapse to near-deterministic policies that happen to disagree with human actions.
 
 \begin{table}[t]
 \centering
@@ -418,6 +411,7 @@ BC-only & $34.3$ & $74.3$ & 0.88 & --- \\
 CALM & $34.0 \pm 1.2\%$ & $74.1 \pm 0.4\%$ & 0.88 & $\mathbf{1.35}$ \\
 Rule-based & $25.1$ & $54.6$ & 0.65 & --- \\
 Entropy-only & $14.6 \pm 23.8\%$ & $39.2 \pm 17.0\%$ & 0.06 & 0.97 \\
+MADDPG (unconstrained) & $54.8\%$ & $68.0\%$ & 0.003 & 0.96 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -464,7 +458,7 @@ Fig.~\ref{fig:comparison} visualizes the three-way trade-off between agreement, 
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=\columnwidth]{figures/week5_method_comparison.pdf}
+    \includegraphics[width=\columnwidth]{figures/method_comparison.pdf}
     \caption{Comparison of mode collapse mitigation methods across three metrics: NGSIM action agreement (\%), action entropy, and final training reward. Error bars show $\pm 1$ standard deviation across 5 seeds.}
     \label{fig:comparison}
 \end{figure}
@@ -473,7 +467,7 @@ Fig.~\ref{fig:significance} presents the statistical significance heatmap for al
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.85\columnwidth]{figures/week5_significance_heatmap.pdf}
+    \includegraphics[width=0.85\columnwidth]{figures/significance_heatmap.pdf}
     \caption{Statistical significance heatmap ($-\log_{10} p$) for pairwise Welch's $t$-tests on NGSIM agreement. Darker cells indicate stronger statistical differences.}
     \label{fig:significance}
 \end{figure}
@@ -528,11 +522,15 @@ Several limitations should be considered when interpreting our results:
 
 \textbf{NGSIM dataset constraints.} The NGSIM Interstate~80 dataset represents California highway driving from 2005. Driving norms vary by region and have evolved over time. Additionally, the dataset captures human behavior in specific traffic conditions that may not generalize to all scenarios.
 
-\textbf{Scalability beyond 5 agents.} Our experiments use 5 cooperative agents. While prior work on QMIX-CALM scalability (up to 20 agents) shows graceful degradation, the theoretical guarantees in Section~\ref{sec:method} assume fixed agent count. Scaling to hundreds of vehicles in realistic highway scenarios requires further investigation.
+\textbf{Scalability beyond 5 agents.} Our experiments use 5 cooperative agents. While prior work on QMIX-CALM scalability (up to 20 agents) shows graceful degradation, the analysis in Section~\ref{sec:method} assumes fixed agent count. Scaling to hundreds of vehicles in realistic highway scenarios requires further investigation.
 
 \textbf{Homogeneous agent populations.} All agents in our experiments share the same policy architecture and training. Real deployments would involve heterogeneous vehicles with different capabilities, objectives, and levels of automation.
 
 \textbf{Limited action agreement ceiling.} The maximum observed agreement ($45.3\%$) may seem low, but this reflects inherent uncertainty in human driving decisions rather than model failure. Multiple reasonable actions often exist for a given state, and different humans would choose differently.
+
+\subsection{Relation to Prior Work}
+
+This study extends our prior work on cooperative highway exit coordination~\cite{jeragh2026coex}, which introduced the Dec-POMDP formulation, hybrid reward function, and first comparison of MADDPG and QMIX for multi-exit scenarios. That study reported $54.83\%$ NGSIM action agreement for unconstrained MADDPG---consistent with the $54.8\%$ reported here---but did not analyze action distributions in depth. The present work reveals that this seemingly high agreement is an artifact of mode collapse (Table~\ref{tab:agreement}), motivating the CALM algorithm as a principled solution. The two studies share the same simulation environment and NGSIM validation pipeline, ensuring consistency across results.
 
 % ============================================================
 \section{Conclusion}
@@ -540,7 +538,7 @@ Several limitations should be considered when interpreting our results:
 
 Mode collapse is a critical barrier to deploying multi-agent reinforcement learning for cooperative autonomous driving. When trained policies converge to repetitive, non-diverse behaviors, they fail to exhibit the adaptive, human-like decision-making required for safe and socially acceptable driving.
 
-This paper presented CALM (Constrained Actor-Learning from deMonstrations), a hybrid imitation-reinforcement learning algorithm that prevents mode collapse through behavioral cloning pre-training followed by RL fine-tuning with a decaying KL-divergence constraint. We provided theoretical analysis establishing that the KL constraint yields a provable entropy lower bound during training (Theorem~\ref{thm:kl_bound} and Proposition~\ref{prop:entropy_bound}), preventing policy degeneration while allowing reward-driven improvement.
+This paper presented CALM (Constrained Actor-Learning from deMonstrations), a hybrid imitation-reinforcement learning algorithm that prevents mode collapse through behavioral cloning pre-training followed by RL fine-tuning with a decaying KL-divergence constraint. We analyzed the properties of the KL constraint, showing that it controls divergence from the BC prior and provides a mechanism for maintaining action diversity during training.
 
 Our 25-run statistical study on cooperative highway exit coordination, validated against the NGSIM naturalistic driving dataset, yielded three key findings:
 
@@ -560,7 +558,7 @@ The code and trained models are available at \url{https://github.com/mjeragh/VAN
 
 % ============================================================
 \section*{Acknowledgments}
-This work was supported by Kuwait University Research Grant [grant number to be added].
+This work was supported by Kuwait University.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
