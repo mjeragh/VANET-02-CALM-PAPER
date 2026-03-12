@@ -40,44 +40,36 @@ All applied in commit `db239fc` on `fix/reviewer-ready-calm-paper`:
 
 All experiments run from `/Users/mohammadjeragh/Source/VANET/MyScenarios/AnyScenario/`.
 
-### Fix 6: Tune entropy-only baseline (HIGH PRIORITY)
-**Why:** Central claim ("entropy alone fails") rests on a single untuned α=0.01. A reviewer asking "did you try other values?" undermines the paper.
+### Fix 6: Tune entropy-only baseline (IN PROGRESS 🔄)
+**Status:** Experiment running via `run_entropy_tuning.sh`. First run (α=0.001, seed=42) completed in 82 min.
+30 total runs, estimated ~41 hours. Script supports resume via DONE marker files.
 
-**What to do:**
-1. Run entropy-only MADDPG with α_ent ∈ {0.001, 0.01, 0.05, 0.1, 0.5, 1.0}
-2. Each α × 5 seeds = 30 runs total
-3. Report best-performing α in the paper
-4. If all fail → claim is bulletproof
-5. If some succeed → reframe CALM's advantage as "does not require entropy tuning"
+**When complete:**
+1. Run `analyze_entropy_tuning.py` to process results
+2. Run NGSIM validation on best checkpoints
+3. Update Table I with tuned entropy baseline results
 
-**Where in paper:** Update Section V-C (Baselines) and Table I
+### Fix 7: Add learning curves figure (DONE ✅)
+**Status:** Completed in commit `6b64933`. Generated `figures/learning_curves.pdf` from Week 5 training data.
+Added Fig. 4 and convergence paragraph to Section VI-A.
 
-### Fix 7: Add learning curves figure (HIGH PRIORITY)
-**Why:** Paper is about a training algorithm but shows no training dynamics.
+### Fix 8: Equalize or justify training budgets (DONE ✅)
+**Status:** Completed in commit `6b64933`. Added paragraph referencing learning curves to justify
+convergence-appropriate training budgets (DAgger 50, QMIX 100, CALM/GAIL 300 episodes).
 
-**What to do:**
-1. Plot reward vs. episode for all methods (mean ± std across 5 seeds)
-2. One figure with subplots or overlaid curves
-3. Save to `figures/learning_curves.pdf`
-4. Add figure reference in Section VI (Results), before or after Table I
+### Fix 11: Add safety metrics (DONE ✅)
+**Status:** Completed in commit `8831ee8`. Evaluation script at `VANET/experiments/calm_paper/evaluate_safety_metrics.py`.
 
-**Data source:** Should be in training logs. Check `results/` or `logs/` directories. If not logged, re-run with logging enabled.
+**Results (100 eval episodes per method):**
+| Method | Collision Rate | Exit Success | Avg Speed (m/s) | Proximity/ep |
+|--------|---------------|-------------|-----------------|-------------|
+| CALM | 0.0% | **33.3%** | **25.8 ± 1.2** | **42.5** |
+| QMIX-CALM | 0.0% | 26.7% | 19.7 ± 6.9 | 220.9 |
+| Entropy-only | 0.0% | 20.0% | 16.3 ± 6.1 | 685.4 |
+| DAgger | 0.0% | 7.7% | 11.0 ± 3.6 | 3150.5 |
+| GAIL | 0.0% | 6.7% | 8.1 ± 2.2 | 2563.8 |
 
-### Fix 8: Equalize or justify training budgets (MEDIUM PRIORITY)
-**Why:** DAgger=50 eps, QMIX-CALM=100, CALM/GAIL=300 — unfair comparison.
-
-**Options (pick one):**
-- Best: Re-run DAgger for 300 episodes and QMIX-CALM for 300 episodes
-- OK: Use learning curves (Fix 7) to show each method plateaued before its budget ended
-- Minimum: Add a paragraph in Section V-E justifying different budgets
-
-### Fix 11: Add safety metrics (MEDIUM PRIORITY)
-**Why:** T-IV reviewers expect transportation metrics, not just ML metrics.
-
-**What to do:**
-1. Extract from simulation logs: collision rate (%), exit success rate (%), average speed
-2. Add a row or column to Table I, or a new small table
-3. These numbers likely already exist — check SUMO TraCI logs
+Added as Table III in Section VI-E "Driving Safety Evaluation".
 
 ### Fix 12: λ₀ and δ ablation (MEDIUM PRIORITY)
 **Why:** These are CALM's two key hyperparameters. No ablation = obvious reviewer request.
@@ -100,16 +92,17 @@ All experiments run from `/Users/mohammadjeragh/Source/VANET/MyScenarios/AnyScen
 
 ## Estimated effort for remaining fixes
 
-| Fix | Compute time | Human effort | Impact |
-|-----|-------------|-------------|--------|
-| 6 (entropy tuning) | ~6h (30 runs) | 2h setup + plotting | +5-8% |
-| 7 (learning curves) | 0h if logged, ~12h if re-run | 2h plotting | +3-5% |
-| 8 (budgets) | 0-8h depending on approach | 1h writing | +3-5% |
-| 11 (safety metrics) | 0h (extract from logs) | 2h | +3-5% |
-| 12 (ablation) | ~8h (35 runs) | 2h plotting | +3-5% |
-| **Total** | **~14-34h compute** | **~9h human** | **+15-25%** |
+| Fix | Status | Impact |
+|-----|--------|--------|
+| 6 (entropy tuning) | 🔄 Running (~41h remaining) | +5-8% |
+| 7 (learning curves) | ✅ Done | +3-5% |
+| 8 (budgets) | ✅ Done | +3-5% |
+| 11 (safety metrics) | ✅ Done | +3-5% |
+| 12 (λ₀/δ ablation) | ⏳ Waiting for Fix 6 | +3-5% |
+| 15 (MAPPO/SAC) | ⏳ Low priority | +2-3% |
 
-With all fixes: estimated acceptance probability at T-IV rises from ~25-30% to ~45-55%.
+**Completed so far:** Fixes 1-5 (text), 7, 8, 9, 10, 11, 13, 14, 16.
+**Remaining:** Fix 6 (running), Fix 12 (blocked on Fix 6), Fix 15 (optional).
 
 ---
 
