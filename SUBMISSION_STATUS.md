@@ -40,14 +40,21 @@ All applied in commit `db239fc` on `fix/reviewer-ready-calm-paper`:
 
 All experiments run from `/Users/mohammadjeragh/Source/VANET/MyScenarios/AnyScenario/`.
 
-### Fix 6: Tune entropy-only baseline (IN PROGRESS 🔄)
-**Status:** Experiment running via `run_entropy_tuning.sh`. First run (α=0.001, seed=42) completed in 82 min.
-30 total runs, estimated ~41 hours. Script supports resume via DONE marker files.
+### Fix 6: Tune entropy-only baseline (DONE ✅)
+**Status:** Completed. 30 runs (43.5h total), NGSIM validation done.
 
-**When complete:**
-1. Run `analyze_entropy_tuning.py` to process results
-2. Run NGSIM validation on best checkpoints
-3. Update Table I with tuned entropy baseline results
+**Results:** Mode collapse confirmed across ALL α_ent values:
+| α_ent | Agreement | Entropy | Verdict |
+|-------|-----------|---------|---------|
+| 0.001 | 24.6±17.4% | 0.002 | Collapse |
+| 0.01 | 0.5±0.5% | 0.045 | Collapse |
+| 0.05 | 20.1±20.0% | 0.000 | Collapse |
+| 0.1 | 32.8±26.8% | 0.006 | Collapse |
+| 0.5 | 23.5±18.3% | 0.228 | Partial collapse |
+| 1.0 | 14.6±13.9% | 0.235 | Partial collapse |
+
+vs CALM: 34.0±1.2%, entropy 0.88 — bulletproof central claim.
+Added as Table IV in paper.
 
 ### Fix 7: Add learning curves figure (DONE ✅)
 **Status:** Completed in commit `6b64933`. Generated `figures/learning_curves.pdf` from Week 5 training data.
@@ -94,15 +101,15 @@ Added as Table III in Section VI-E "Driving Safety Evaluation".
 
 | Fix | Status | Impact |
 |-----|--------|--------|
-| 6 (entropy tuning) | 🔄 Running (~41h remaining) | +5-8% |
+| 6 (entropy tuning) | ✅ Done (30 runs, 43.5h) | +5-8% |
 | 7 (learning curves) | ✅ Done | +3-5% |
 | 8 (budgets) | ✅ Done | +3-5% |
 | 11 (safety metrics) | ✅ Done | +3-5% |
-| 12 (λ₀/δ ablation) | ⏳ Waiting for Fix 6 | +3-5% |
+| 12 (λ₀/δ ablation) | 🔄 Running (80 runs, ~109h) | +3-5% |
 | 15 (MAPPO/SAC) | ⏳ Low priority | +2-3% |
 
-**Completed so far:** Fixes 1-5 (text), 7, 8, 9, 10, 11, 13, 14, 16.
-**Remaining:** Fix 6 (running), Fix 12 (blocked on Fix 6), Fix 15 (optional).
+**Completed so far:** Fixes 1-5 (text), 6, 7, 8, 9, 10, 11, 13, 14, 16.
+**Remaining:** Fix 12 (running, ~109h), Fix 15 (optional).
 
 ---
 
