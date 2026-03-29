@@ -409,20 +409,21 @@ The entropy-only baseline achieves only $14.6\% \pm 23.8\%$ agreement---\emph{wo
 \centering
 \caption{NGSIM Action Agreement and Action Diversity (5 seeds per method)}
 \label{tab:agreement}
-\footnotesize
+\scriptsize
+\setlength{\tabcolsep}{4pt}
 \begin{tabular}{lcccc}
 \toprule
-\textbf{Method} & \textbf{Agreement} & \textbf{Similarity} & \textbf{Entropy} & \textbf{Reward} \\
+\textbf{Method} & \textbf{Agreement (\%)} & \textbf{Similarity (\%)} & \textbf{Entropy} & \textbf{Reward} \\
 \midrule
-DAgger & $\mathbf{45.3 \pm 0.9\%}$ & $\mathbf{98.1 \pm 1.0\%}$ & 0.63 & 0.44 \\
-QMIX-CALM & $40.1 \pm 2.3\%$ & $75.8 \pm 2.1\%$ & 0.70 & 1.01 \\
-GAIL & $34.5 \pm 13.9\%$ & $61.5 \pm 11.1\%$ & 0.50 & 0.42 \\
+DAgger & $\mathbf{45.3 \pm 0.9}$ & $\mathbf{98.1 \pm 1.0}$ & 0.63 & 0.44 \\
+QMIX-CALM & $40.1 \pm 2.3$ & $75.8 \pm 2.1$ & 0.70 & 1.01 \\
+GAIL & $34.5 \pm 13.9$ & $61.5 \pm 11.1$ & 0.50 & 0.42 \\
 BC-only & $34.3$ & $74.3$ & 0.88 & --- \\
-CALM & $34.0 \pm 1.2\%$ & $74.1 \pm 0.4\%$ & 0.88 & $\mathbf{1.35}$ \\
-MASAC & $25.8\%$ & $59.2\%$ & 1.38 & 1.06 \\
+CALM & $34.0 \pm 1.2$ & $74.1 \pm 0.4$ & 0.88 & $\mathbf{1.35}$ \\
+MASAC & $24.8 \pm 12.7$ & $50.3 \pm 7.1$ & 0.93 & 1.08 \\
 Rule-based & $25.1$ & $54.6$ & 0.65 & --- \\
-Entropy-only & $14.6 \pm 23.8\%$ & $39.2 \pm 17.0\%$ & 0.06 & 0.97 \\
-MADDPG (unconstrained) & $54.8\%$ & $68.0\%$ & 0.003 & 0.96 \\
+Entropy-only & $14.6 \pm 23.8$ & $39.2 \pm 17.0$ & 0.06 & 0.97 \\
+MADDPG (unconstr.) & $54.8$ & $68.0$ & 0.003 & 0.96 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -486,7 +487,7 @@ CALM    & $34.0 \pm 1.2$  & $0.88$  & $1.35$ \\
 \end{tabular}
 \end{table}
 
-\textbf{MASAC achieves the highest entropy} ($1.38$) through its automatic temperature tuning mechanism, which adapts the entropy bonus online. Unlike the entropy-only baseline with a fixed coefficient, SAC's learned temperature successfully prevents mode collapse. However, this high entropy is \emph{undirected}: SAC allocates $34\%$ of actions to Lane\_Right (vs.\ $0.2\%$ in NGSIM) and only $38\%$ to Maintain (vs.\ $55\%$), yielding $25.8\%$ agreement---near the rule-based baseline. This demonstrates that preventing mode collapse is necessary but not sufficient; without demonstration anchoring, the resulting diversity does not resemble human behavior.
+\textbf{MASAC achieves high entropy} ($0.93 \pm 0.25$) through its automatic temperature tuning mechanism, which adapts the entropy bonus online. Unlike the entropy-only baseline with a fixed coefficient, SAC's learned temperature successfully prevents mode collapse. However, MASAC exhibits extreme instability across seeds: agreement ranges from $15.3\%$ to $49.8\%$ ($\pm 12.7\%$), compared to CALM's $\pm 1.2\%$. This $10\times$ higher variance indicates that without demonstration anchoring, the policy's behavior is sensitive to random initialization---some seeds happen to learn human-like patterns while others diverge entirely. The diversity SAC achieves is \emph{undirected}, and whether it aligns with human behavior is left to chance.
 
 This is the key finding supporting our hypothesis: \emph{generic entropy regularization is insufficient for producing human-like diversity in MARL; anchoring to human demonstrations via structured constraints is essential.}
 
@@ -514,7 +515,7 @@ While human-likeness is our primary objective, task performance remains importan
 
 \textbf{CALM achieves the highest reward} ($1.35 \pm 0.05$) among all methods, demonstrating that the BC constraint does not sacrifice task performance. The decaying $\lambda(t)$ schedule allows CALM to eventually optimize the reward while retaining the action diversity established during BC pre-training.
 
-\textbf{MASAC achieves moderate reward} ($1.06 \pm 0.16$) but with substantially higher variance than CALM, reflecting less stable training. While SAC's automatic entropy tuning prevents mode collapse, the lack of demonstration anchoring leads to undirected exploration that is less sample-efficient than CALM's constrained approach.
+\textbf{MASAC achieves moderate reward} ($1.08 \pm 0.18$) but with $3.6\times$ higher variance than CALM, reflecting less stable training. While SAC's automatic entropy tuning prevents mode collapse, the lack of demonstration anchoring leads to undirected exploration that is less sample-efficient than CALM's constrained approach.
 
 \textbf{QMIX-CALM achieves good reward} ($1.01 \pm 0.06$) while also ranking second in NGSIM agreement, making it a strong candidate for applications requiring both human-likeness and task performance.
 
@@ -597,7 +598,7 @@ The results reveal a fundamental trade-off between human-likeness and reward max
 
     \item \textbf{Entropy regularization alone fails}: despite explicitly encouraging diverse actions, the entropy-only baseline collapses to near-zero entropy ($0.06$), confirming that mode collapse in MARL requires structured constraints (e.g., anchoring to demonstrations) rather than generic diversity bonuses.
 
-    \item \textbf{MASAC prevents collapse but not human-likeness}: SAC's automatic temperature tuning achieves the highest entropy ($1.38$) but only $25.8\%$ NGSIM agreement---near random. This distinguishes \emph{undirected diversity} (SAC) from \emph{structured diversity} (CALM), and confirms that demonstration anchoring is the critical ingredient.
+    \item \textbf{MASAC prevents collapse but not reliably}: SAC's automatic temperature tuning achieves high entropy ($0.93$) but with $10\times$ the variance of CALM in NGSIM agreement ($\pm 12.7\%$ vs.\ $\pm 1.2\%$). This distinguishes \emph{undirected diversity} (SAC) from \emph{structured diversity} (CALM), and confirms that demonstration anchoring is the critical ingredient for stable, human-like behavior.
 \end{enumerate}
 
 \subsection{Implications for Cooperative Driving}
@@ -643,12 +644,12 @@ Our 25-run statistical study on cooperative highway exit coordination, validated
 \begin{enumerate}
     \item \textbf{DAgger achieves the highest human-likeness} with $45.3\% \pm 0.9\%$ NGSIM action agreement ($p < 0.001$), making it the preferred choice when matching human behavior is paramount.
 
-    \item \textbf{CALM achieves the highest task reward} ($1.35 \pm 0.05$) while maintaining high action diversity (entropy $= 0.88$), demonstrating that the BC constraint successfully prevents mode collapse without sacrificing performance.
+    \item \textbf{CALM achieves the highest task reward} ($1.35 \pm 0.05$) while maintaining high action diversity (entropy $= 0.88$) and the best safety profile ($33.3\%$ exit success, lowest proximity events), demonstrating that the BC constraint prevents mode collapse while simultaneously improving both task performance and driving safety.
 
     \item \textbf{Entropy regularization alone is insufficient}: the entropy-only baseline collapsed to near-zero entropy ($0.06$) despite explicit diversity incentives, confirming that mode collapse in MARL requires structured constraints anchored to human demonstrations.
 \end{enumerate}
 
-These results establish that incorporating human behavioral priors through constrained learning is essential for developing MARL policies that exhibit diverse, human-like driving behaviors suitable for real-world deployment.
+Crucially, MASAC---which uses automatic entropy tuning without demonstrations---achieves high entropy ($0.93$) but wildly unstable agreement ($24.8 \pm 12.7\%$, compared to CALM's $\pm 1.2\%$), confirming that preventing mode collapse alone is insufficient; the resulting diversity must be \emph{structured} by human demonstrations to be both useful and reliable. These results establish that incorporating human behavioral priors through constrained learning is essential for developing MARL policies that are simultaneously diverse, human-like, and safe---the combination required for real-world deployment.
 
 Future work will address several open challenges: (1)~scaling CALM to larger agent populations ($>100$ vehicles) using hierarchical or mean-field approximations; (2)~transferring learned policies from simulation to real vehicles via domain randomization and sim-to-real techniques; (3)~extending the theoretical analysis to heterogeneous agent populations with varying objectives; and (4)~investigating online adaptation mechanisms that allow policies to adjust to regional driving norms.
 
