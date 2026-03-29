@@ -2,7 +2,7 @@
 
 **Target:** IEEE Transactions on Intelligent Vehicles (T-IV)
 **Current branch:** `fix/reviewer-ready-calm-paper`
-**Last updated:** March 12, 2026
+**Last updated:** March 28, 2026
 
 ---
 
@@ -78,22 +78,35 @@ convergence-appropriate training budgets (DAgger 50, QMIX 100, CALM/GAIL 300 epi
 
 Added as Table III in Section VI-E "Driving Safety Evaluation".
 
-### Fix 12: λ₀ and δ ablation (MEDIUM PRIORITY)
-**Why:** These are CALM's two key hyperparameters. No ablation = obvious reviewer request.
+### Fix 12: λ₀ and δ ablation (DONE ✅)
+**Status:** Completed. Full 4×4 grid (80 runs, 5 seeds each). Analysis script at
+`VANET/experiments/calm_paper/ablation/analyze_lambda_delta.py`.
 
-**What to do:**
-1. Run CALM with λ₀ ∈ {0.5, 1.0, 2.0, 5.0} (fixing δ=0.999)
-2. Run CALM with δ ∈ {0.99, 0.995, 0.999, 1.0} (fixing λ₀=2.0)
-3. 7 configs × 5 seeds = 35 runs
-4. Report as small table or figure in Section VI
+**Results (last-50-episode avg reward, mean ± std over 5 seeds):**
+| λ₀ \ δ | 0.99 | 0.995 | 0.999 | 1.0 |
+|---------|------|-------|-------|-----|
+| 0.5 | **1.39 ± 0.07** | 1.34 ± 0.06 | 1.32 ± 0.04 | 1.35 ± 0.03 |
+| 1.0 | 1.32 ± 0.06 | 1.30 ± 0.08 | 1.35 ± 0.05 | 1.34 ± 0.03 |
+| 2.0 | 1.34 ± 0.03 | 1.31 ± 0.03 | 1.36 ± 0.04† | 1.34 ± 0.03 |
+| 5.0 | 1.33 ± 0.03 | 1.32 ± 0.04 | 1.33 ± 0.03 | 1.33 ± 0.04 |
 
-### Fix 15: Add MAPPO or SAC baseline (LOW PRIORITY, nice-to-have)
-**Why:** MAPPO is current MARL SOTA (Yu et al. 2022, already cited). SAC has automatic entropy tuning.
+**Key finding:** CALM is robust — <7% variation across all 16 configs. Default (λ₀=2.0, δ=0.999) ranks 2nd.
+Added as Table V in Section VI-F "Hyperparameter Sensitivity".
 
-**What to do:**
-1. Implement MAPPO or SAC agent (likely ~200 lines based on existing agent structure)
-2. Run 5 seeds × 300 episodes
-3. Add to Table I
+### Fix 15: Add SAC baseline (DONE ✅)
+**Status:** Completed. MASAC implemented (discrete SAC with twin Q-networks, auto temperature, CTDE).
+5 seeds × 300 episodes (7h total). Agent: `VANET/sac_agent.py`.
+
+**Results:**
+| Metric | MASAC | CALM |
+|--------|-------|------|
+| Reward | 1.06 ± 0.16 | 1.35 ± 0.05 |
+| NGSIM Agreement | 25.8% | 34.0% |
+| Entropy | 1.38 | 0.88 |
+
+**Key finding:** SAC prevents mode collapse (entropy 1.38) but diversity is undirected —
+agreement near rule-based baseline. Confirms CALM's demonstration anchoring is essential.
+Added MASAC row to Table I, discussion in Sections VI-C and VI-D, plus Key Finding #5.
 
 ---
 
@@ -105,11 +118,10 @@ Added as Table III in Section VI-E "Driving Safety Evaluation".
 | 7 (learning curves) | ✅ Done | +3-5% |
 | 8 (budgets) | ✅ Done | +3-5% |
 | 11 (safety metrics) | ✅ Done | +3-5% |
-| 12 (λ₀/δ ablation) | 🔄 Running (80 runs, ~109h) | +3-5% |
-| 15 (MAPPO/SAC) | ⏳ Low priority | +2-3% |
+| 12 (λ₀/δ ablation) | ✅ Done (80 runs) | +3-5% |
+| 15 (MASAC baseline) | ✅ Done (5 runs, 7h) | +2-3% |
 
-**Completed so far:** Fixes 1-5 (text), 6, 7, 8, 9, 10, 11, 13, 14, 16.
-**Remaining:** Fix 12 (running, ~109h), Fix 15 (optional).
+**All fixes complete.** Paper is submission-ready for IEEE T-IV.
 
 ---
 
