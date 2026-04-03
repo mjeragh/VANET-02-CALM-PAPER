@@ -192,7 +192,7 @@ The NGSIM human driving distribution has a normalized entropy $\approx 0.65$, se
 \section{CALM: Proposed Method}
 \label{sec:method}
 
-CALM consists of two phases: (1)BC pre-training to initialize policies with human-like action distributions, and (2)RL fine-tuning with a decaying KL-divergence constraint that prevents mode collapse while allowing policy improvement.
+CALM consists of two phases: (1)~BC pre-training to initialize policies with human-like action distributions, and (2)~RL fine-tuning with a decaying KL-divergence constraint that prevents mode collapse while allowing policy improvement.
 
 \subsection{Phase 1: Behavioral Cloning Pre-Training}
 
@@ -202,7 +202,7 @@ Given a dataset $\mathcal{D}_{\text{NGSIM}} = \{(o_j, a_j^*)\}_{j=1}^{M}$ of hum
     \label{eq:bc_loss}
 \end{equation}
 
-The pre-trained policy $\pi_{\text{BC}}$ serves two purposes: (a)it provides a warm-start initialization for RL training, and (b)it defines the reference distribution for the KL constraint in Phase~2.
+The pre-trained policy $\pi_{\text{BC}}$ serves two purposes: (a)~it provides a warm-start initialization for RL training, and (b)~it defines the reference distribution for the KL constraint in Phase~2.
 After BC pre-training, we stored a frozen copy $\pi_{\text{BC}}$ of the policy parameters.
 
 \subsection{Phase 2: Constrained RL Fine-Tuning}
@@ -228,7 +228,7 @@ The intuition is as follows: early in training, $\lambda(t)$ is large, strongly 
 
 \subsection{CALM with QMIX (QMIX-CALM)}
 
-We also instantiate CALM with the QMIX~\cite{rashid2018qmix} value decomposition architecture. In QMIX-CALM, each agent's individual Q-network produces per-action Q-values, which are combined through the QMIX monotonic mixing network to produce $Q_{\text{tot}}$. To apply the KL penalty, we derive implicit action probabilities from the Q-values via temperature-scaled softmax: $\pi_{\theta_i}(a|o) = \text{softmax}(Q_i(o, \cdot)/\tau)$. A frozen copy of the BC-pretrained Q-networks serves as the reference distribution for the proposed method. The combined loss is:
+We also instantiate CALM with the QMIX~\cite{rashid2018qmix} value decomposition architecture. In QMIX-CALM, each agent's individual Q-network produces per-action Q-values, which are combined through the QMIX monotonic mixing network to produce $Q_{\text{tot}}$. To apply the KL penalty, we derive implicit action probabilities from the Q-values via temperature-scaled softmax: $\pi_{\theta_i}(a|o) = \text{softmax}(Q_i(o, \cdot)/\tau)$. A frozen copy of the BC-pretrained Q-networks serves as the reference distribution. The combined loss is:
 \begin{equation}
     \mathcal{L}_{\text{QMIX-CALM}} = \mathcal{L}_{\text{QMIX}} + \lambda(t) \cdot \frac{1}{n}\sum_{i=1}^{n} D_{\KL}\!\left(\pi_{\theta_i} \,\|\, \pi_{\text{BC},i}\right)
 \end{equation}
@@ -265,7 +265,7 @@ Dividing both sides by $\lambda(t) > 0$ yields the result.
 \end{proof}
 
 \begin{remark}
-The bound{ Eq. (bound} tightens as $\lambda(t)$ increases and relaxes as it decays. With $\lambda_0 = 2.0$ and $\delta = 0.999$, after 300 episodes $\lambda(300) \approx 1.48$, maintaining a meaningful constraint during the training. Full relaxation ($\lambda \approx 0$) requires $\sim$7000 episodes, which is far beyond our training horizon.
+The bound~\eqref{eq:kl_bound} tightens as $\lambda(t)$ increases and relaxes as it decays. With $\lambda_0 = 2.0$ and $\delta = 0.999$, after 300 episodes $\lambda(300) \approx 1.48$, maintaining a meaningful constraint during the training. Full relaxation ($\lambda \approx 0$) requires $\sim$7000 episodes, which is far beyond our training horizon.
 \end{remark}
 
 \begin{proposition}[Entropy Lower Bound Under CALM]
@@ -351,7 +351,7 @@ We evaluated CALM on a cooperative highway-exit coordination task using the SUMO
 
 \subsection{NGSIM Dataset}
 
-We used the NGSIM Interstate80 dataset~\cite{ngsim2006} collected in Emeryville, California. Following Thiemann et al.~\cite{thiemann2008estimating}, we extract vehicle trajectories and discretize continuous actions into our five-action space using the following thresholds: lane changes are detected when the lateral lane index changes by more than $\pm 0.5$ lanes between consecutive time steps (mapping to \emph{Lane\_Left} or \emph{Lane\_Right}); longitudinal acceleration above $+0.5$~m/s$^2$ maps to \emph{Accelerate}, below $-0.5$~m/s$^2$ to \emph{Decelerate}, and the remainder to \emph{Maintain}. Lane changes take priority over acceleration. The resulting dataset contained approximately 50,000 state-action pairs used for BC pre-training and DAgger expert queries.
+We used the NGSIM Interstate~80 dataset~\cite{ngsim2006} collected in Emeryville, California. Following Thiemann et al.~\cite{thiemann2008estimating}, we extract vehicle trajectories and discretize continuous actions into our five-action space using the following thresholds: lane changes are detected when the lateral lane index changes by more than $\pm 0.5$ lanes between consecutive time steps (mapping to \emph{Lane\_Left} or \emph{Lane\_Right}); longitudinal acceleration above $+0.5$~m/s$^2$ maps to \emph{Accelerate}, below $-0.5$~m/s$^2$ to \emph{Decelerate}, and the remainder to \emph{Maintain}. Lane changes take priority over acceleration. The resulting dataset contained approximately 50,000 state-action pairs used for BC pre-training and DAgger expert queries.
 
 \subsection{Baselines}
 
@@ -386,7 +386,7 @@ All experiments used five agents ($n=5$), discount factor $\gamma = 0.99$, soft 
 
 We present the results from our 25-run statistical study (5 methods $\times$ 5 seeds), evaluating each method on NGSIM action agreement, behavioral similarity, action entropy, and task reward.
 
-Fig. Fig. ~\ref{fig:learning_curves} shows the training reward curves for all methods. CALM converges to the highest reward ($\sim$1.35) within 150 episodes and maintains a stable performance. QMIX-CALM converged faster (within 50 episodes) to a slightly lower reward ($\sim$1.0). DAgger, as a supervised method, plateaus quickly at its lower reward level ($\sim$0.44) within 20 epochs. The entropy-only baseline exhibited a high variance across seeds, reflecting its instability. Each method was trained for its convergence-appropriate horizon: DAgger for 50 episodes, QMIX-CALM for 100 episodes, and CALM, GAIL, and entropy-only for 300 episodes.
+Fig.~\ref{fig:learning_curves} shows the training reward curves for all methods. CALM converges to the highest reward ($\sim$1.35) within 150 episodes and maintains a stable performance. QMIX-CALM converged faster (within 50 episodes) to a slightly lower reward ($\sim$1.0). DAgger, as a supervised method, plateaus quickly at its lower reward level ($\sim$0.44) within 20 episodes. The entropy-only baseline exhibited a high variance across seeds, reflecting its instability. Each method was trained for its convergence-appropriate horizon: DAgger for 50 episodes, QMIX-CALM for 100 episodes, and CALM, GAIL, and entropy-only for 300 episodes.
 
 \begin{figure}[t]
     \centering
@@ -460,7 +460,7 @@ The action entropy column in Table~\ref{tab:agreement} directly measures the mod
 
 \textbf{CALM and BC-only achieve the highest entropy} ($0.88$), matching the diversity of the human NGSIM distribution. This confirms that BC pre-training successfully transfers human action diversity to the learned policy and that the decaying KL constraint in CALM preserves this diversity during RL fine-tuning.
 
-\textbf{QMIX-CALM shows slightly lower entropy} ($0.70$) but remains well above the collapse threshold. The discrete nature of QMIX's $\epsilon$-greedy exploration of QMIX may contribute to this difference compared with MADDPG's continuous policy gradient of MADDPG.
+\textbf{QMIX-CALM shows slightly lower entropy} ($0.70$) but remains well above the collapse threshold. The discrete nature of QMIX's $\epsilon$-greedy exploration may contribute to this difference compared with MADDPG's continuous policy gradient.
 
 \textbf{DAgger achieves moderate entropy} ($0.63$), reflecting its supervised learning objective which does not explicitly encourage diversity. However, because DAgger is trained on aggregated datasets that include diverse human actions, it naturally maintains reasonable diversity.
 
@@ -487,11 +487,11 @@ CALM    & $34.0 \pm 1.2$  & $0.88$  & $1.35$ \\
 \end{tabular}
 \end{table}
 
-\textbf{MASAC achieves high entropy} ($0.93 \pm 0.25$) through its automatic temperature tuning mechanism, which adapts the entropy bonus online. Unlike the entropy-only baseline with a fixed coefficient, SAC's learned temperature of the SAC successfully prevents mode collapse. However, MASAC exhibits extreme instability across seeds: agreement ranges from $15.3\%$ to $49.8\%$ ($\pm 12.7\%$), compared to CALM's $\pm 1.2\%$. This $10\times$ higher variance indicates that without demonstration anchoring, the policy's behavior is sensitive to random initialization; some seeds happen to learn human-like patterns while others diverge entirely. The diversity SAC achieves is \emph{undirected}, and whether it aligns with human behavior is left to chance.
+\textbf{MASAC achieves high entropy} ($0.93 \pm 0.25$) through its automatic temperature tuning mechanism, which adapts the entropy bonus online. Unlike the entropy-only baseline with a fixed coefficient, SAC's learned temperature successfully prevents mode collapse. However, MASAC exhibits extreme instability across seeds: agreement ranges from $15.3\%$ to $49.8\%$ ($\pm 12.7\%$), compared to CALM's $\pm 1.2\%$. This $10\times$ higher variance indicates that without demonstration anchoring, the policy's behavior is sensitive to random initialization; some seeds happen to learn human-like patterns while others diverge entirely. The diversity SAC achieves is \emph{undirected}, and whether it aligns with human behavior is left to chance.
 
 This is the key finding supporting our hypothesis: \emph{generic entropy regularization is insufficient for producing human-like diversity in MARL; anchoring to human demonstrations via structured constraints is essential.}
 
-Fig. Figure ~\ref{fig:comparison} visualizes the three-way trade-off between agreement, entropy, and reward.
+Fig.~\ref{fig:comparison} visualizes the three-way trade-off between agreement, entropy, and reward.
 
 \begin{figure}[t]
     \centering
@@ -500,7 +500,7 @@ Fig. Figure ~\ref{fig:comparison} visualizes the three-way trade-off between agr
     \label{fig:comparison}
 \end{figure}
 
-Fig. Figure ~\ref{fig:significance} presents a statistical significance heatmap for all pairwise comparisons.
+Fig.~\ref{fig:significance} presents the statistical significance heatmap for all pairwise comparisons.
 
 \begin{figure}[t]
     \centering
@@ -515,7 +515,7 @@ Although human-likeness is our primary objective, task performance remains impor
 
 \textbf{CALM achieves the highest reward} ($1.35 \pm 0.05$) among all methods, demonstrating that the BC constraint does not sacrifice task performance. The decaying $\lambda(t)$ schedule allows CALM to optimize the reward while retaining the action diversity established during BC pre-training.
 
-\textbf{MASAC achieves moderate reward} ($1.08 \pm 0.18$) but with $3.6\times$ higher variance than CALM, reflecting less stable training. While SAC's automatic entropy tuning of SAC prevents mode collapse, the lack of demonstration anchoring leads to undirected exploration that is less sample-efficient than CALM's constrained approach.
+\textbf{MASAC achieves moderate reward} ($1.08 \pm 0.18$) but with $3.6\times$ higher variance than CALM, reflecting less stable training. While SAC's automatic entropy tuning prevents mode collapse, the lack of demonstration anchoring leads to undirected exploration that is less sample-efficient than CALM's constrained approach.
 
 \textbf{QMIX-CALM achieves good reward} ($1.01 \pm 0.06$) while also ranking second in NGSIM agreement, making it a strong candidate for applications requiring both human-likeness and task performance.
 
@@ -619,7 +619,7 @@ Several limitations should be considered when interpreting our results.
 
 \textbf{Simulation-to-real gap.} Our experiments used the SUMO simulator, which, although widely validated, cannot capture all the dynamics of real-world driving. The discrete 5-action space is a simplification because real vehicles have continuous control. The transfer to physical vehicles requires additional domain adaptation techniques.
 
-\textbf{NGSIM dataset constraints.} The NGSIM Interstate80 dataset represents California highway driving from 2005. Driving norms vary by region and have evolved over the years. Additionally, the dataset captures human behavior under specific traffic conditions that may not be generalized to all scenarios.
+\textbf{NGSIM dataset constraints.} The NGSIM Interstate~80 dataset represents California highway driving from 2005. Driving norms vary by region and have evolved over the years. Additionally, the dataset captures human behavior under specific traffic conditions that may not be generalized to all scenarios.
 
 \textbf{Scalability beyond 5 agents.} Our experiments used five cooperative agents. While prior work on QMIX-CALM scalability (up to 20 agents) shows graceful degradation, the analysis in Section~\ref{sec:method} assumes a fixed agent count. Scaling to hundreds of vehicles in realistic highway scenarios requires further research.
 
