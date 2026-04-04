@@ -192,7 +192,7 @@ The NGSIM human driving distribution has a normalized entropy $\approx 0.65$, se
 \section{CALM: Proposed Method}
 \label{sec:method}
 
-CALM consists of two phases: (1)BC pre-training to initialize policies with human-like action distributions and (2)RL fine-tuning with a decaying KL-divergence constraint that prevents mode collapse while allowing policy improvement.
+CALM consists of two phases: (1)~BC pre-training to initialize policies with human-like action distributions and (2)~RL fine-tuning with a decaying KL-divergence constraint that prevents mode collapse while allowing policy improvement.
 
 \subsection{Phase 1: Behavioral Cloning Pre-Training}
 
@@ -202,7 +202,7 @@ Given a dataset $\mathcal{D}_{\text{NGSIM}} = \{(o_j, a_j^*)\}_{j=1}^{M}$ of hum
     \label{eq:bc_loss}
 \end{equation}
 
-The pre-trained policy $\pi_{\text{BC}}$ serves two purposes: (a)it provides a warm-start initialization for RL training and (b)it defines the reference distribution for the KL constraint in Phase2.
+The pre-trained policy $\pi_{\text{BC}}$ serves two purposes: (a)~it provides a warm-start initialization for RL training and (b)~it defines the reference distribution for the KL constraint in Phase~2.
 After BC pre-training, we stored a frozen copy $\pi_{\text{BC}}$ of the policy parameters.
 
 \subsection{Phase 2: Constrained RL Fine-Tuning}
@@ -456,7 +456,7 @@ Entropy-only vs.\ CALM & $0.14$ & No \\
 
 \subsection{Mode Collapse Analysis}
 
-The action entropy column in Table~\ref{tab:agreement} directly measures mode collapse prevention. Recall that from Definition~\ref{def:mode_collapse} that an entropy below $0.1$ indicates mode collapse.
+The action entropy column in Table~\ref{tab:agreement} directly measures mode collapse prevention. Recall from Definition~\ref{def:mode_collapse} that an entropy below $0.1$ indicates mode collapse.
 
 \textbf{CALM and BC-only achieve the highest entropy} ($0.88$), matching the diversity of the human NGSIM distribution. This confirms that BC pre-training successfully transfers human action diversity to the learned policy and that the decaying KL constraint in CALM preserves this diversity during RL fine-tuning.
 
@@ -548,11 +548,11 @@ GAIL       & $0.0$  & $6.7$  & $8.1 \pm 2.2$  & $2563.8$  \\
 \parbox{\columnwidth}{\scriptsize Collision rate: fraction of episodes with $\geq 1$ vehicle teleportation. Exit success: Fraction of exit-assigned agents reaching an exit ramp. Proximity events: simulation steps with $<5$\,m inter-vehicle distance.}
 \end{table}
 
-Table~\ref{tab:safety} reveals that CALM achieved the best driving performance across all safety metrics. CALM's exit success rate ($33.3\%$) was significantly higher than those of DAgger ($7.7\%$) and GAIL ($6.7\%$), demonstrating that reward optimization enables task completion, whereas the BC constraint preserves behavioral diversity. CALM also maintained the highest average speed ($25.8$\, \ m/s, close to the highway speed limit of $33.3$\, \ m/s) with the lowest variance ($\pm 1.2$\, \ m/s), indicating consistent and efficient driving.
+Table~\ref{tab:safety} reveals that CALM achieved the best driving performance across all safety metrics. CALM's exit success rate ($33.3\%$) was significantly higher than those of DAgger ($7.7\%$) and GAIL ($6.7\%$), demonstrating that reward optimization enables task completion, whereas the BC constraint preserves behavioral diversity. CALM also maintained the highest average speed ($25.8$\,m/s, close to the highway speed limit of $33.3$\,m/s) with the lowest variance ($\pm 1.2$\,m/s), indicating consistent and efficient driving.
 
 The proximity event metric reveals a stark contrast: DAgger and GAIL policies produce over $2500$ close-proximity steps per episode, compared with only $42.5$ for CALM. These imitation-focused methods learn cautious and slow behavior from human demonstrations (avg. \ speed $8$--$11$\,m/s), which paradoxically increases time spent near other vehicles. CALM's higher speed and more decisive lane-changing behavior reduce exposure to proximity risks.
 
-All methods achieved a zero collision rate because the SUMO safety model prevented physical collisions via forced braking. Therefore, the proximity-and speed metrics are more informative discriminators of driving quality in this simulation environment.
+All methods achieved a zero collision rate because the SUMO safety model prevented physical collisions via forced braking. Therefore, the proximity and speed metrics are more informative discriminators of driving quality in this simulation environment.
 
 \subsection{Hyperparameter Sensitivity}
 
