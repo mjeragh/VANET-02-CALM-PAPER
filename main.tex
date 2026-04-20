@@ -347,7 +347,7 @@ We evaluated CALM on a cooperative highway-exit coordination task using the SUMO
 
 \subsection{NGSIM Dataset}
 
-We used the NGSIM Interstate~80 dataset~\cite{ngsim2006} collected in Emeryville, California. Following Thiemann et al.~\cite{thiemann2008estimating}, we extracted vehicle trajectories and discretized continuous actions into our five-action space using the following thresholds: lane changes are detected when the lateral lane index changes by more than $\pm 0.5$ lanes between consecutive time steps (mapping to \emph{Lane\_Left} or \emph{Lane\_Right}); longitudinal acceleration above $+0.5$~m/s$^2$ maps to \emph{Accelerate}, below $-0.5$~m/s$^2$ to \emph{Decelerate}, and the remainder to \emph{Maintain}. Lane changes take priority over acceleration. The resulting dataset contained approximately 50,000 state-action pairs used for BC pre-training and DAgger expert queries.
+We used the NGSIM Interstate~80 dataset~\cite{ngsim2006} collected in Emeryville, California. While newer naturalistic datasets such as HighD and Waymo Open provide richer sensor modalities, NGSIM remains the standard benchmark for multi-vehicle cooperative highway studies because of its high-density traffic segments with synchronized trajectories for all vehicles in a congested bottleneck---precisely the setting our exit-coordination task targets. Following Thiemann et al.~\cite{thiemann2008estimating}, we extracted vehicle trajectories and discretized continuous actions into our five-action space using the following thresholds: lane changes are detected when the lateral lane index changes by more than $\pm 0.5$ lanes between consecutive time steps (mapping to \emph{Lane\_Left} or \emph{Lane\_Right}); longitudinal acceleration above $+0.5$~m/s$^2$ maps to \emph{Accelerate}, below $-0.5$~m/s$^2$ to \emph{Decelerate}, and the remainder to \emph{Maintain}. Lane changes take priority over acceleration. The resulting dataset contained approximately 50,000 state-action pairs used for BC pre-training and DAgger expert queries.
 
 \subsection{Baselines}
 
@@ -419,9 +419,11 @@ CALM & $34.0 \pm 1.2$ & $74.1 \pm 0.4$ & 0.88 & $\mathbf{1.35}$ \\
 MASAC & $24.8 \pm 12.7$ & $50.3 \pm 7.1$ & 0.93 & 1.08 \\
 Rule-based & $25.1$ & $54.6$ & 0.65 & --- \\
 Entropy-only & $14.6 \pm 23.8$ & $39.2 \pm 17.0$ & 0.06 & 0.97 \\
-MADDPG (unconstr.) & $54.8$ & $68.0$ & 0.003 & 0.96 \\
+MADDPG (unconstr.) & $54.8^{\dagger}$ & $68.0$ & 0.003 & 0.96 \\
 \bottomrule
 \end{tabular}
+\vspace{1mm}
+\parbox{\columnwidth}{\scriptsize $^{\dagger}$Degenerate policy: selects ``Maintain'' $99.7\%$ of the time (entropy $0.003$), so this agreement is an artifact of matching the most frequent NGSIM action rather than a human-like policy. See Section~\ref{sec:results}-A.}
 \end{table}
 
 \subsection{Statistical Significance}
