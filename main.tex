@@ -48,7 +48,7 @@ Kuwait University, Kuwait\\
 
 % ============================================================
 \begin{abstract}
-Cooperative highway driving with connected autonomous vehicles requires multi-agent policies that are simultaneously safe, task-competent, and human-like. However, multi-agent reinforcement learning (MARL) applied to this setting is plagued by \emph{mode collapse}: trained policies converge to a single repeated action (e.g., selecting ``Maintain'' $99.7\%$ of the time in our environment), abandoning the diverse lane-change and speed-adjustment behaviors needed for exit coordination and producing vehicles that human drivers cannot predict. Standard remedies---entropy regularization, exploration bonuses, and value-decomposition methods---fail to resolve this degeneracy in discrete-action cooperative driving, as we demonstrate empirically across an entropy-coefficient sweep and a multi-agent SAC baseline.
+Coordinating highway exits in dense traffic requires connected autonomous vehicles to execute precise, tightly-coupled lane-change and speed-adjustment maneuvers under shared safety constraints. Multi-agent reinforcement learning (MARL) offers a scalable framework for this task, but MARL policies trained in cooperative driving environments are plagued by \emph{mode collapse}: they converge to a single repeated action (e.g., selecting ``Maintain'' $99.7\%$ of the time in our environment), abandoning exactly the lane-change and acceleration behaviors that exit coordination demands and producing vehicles whose actions human drivers cannot anticipate. Standard remedies---entropy regularization, exploration bonuses, and value-decomposition methods---fail to resolve this degeneracy in discrete-action cooperative driving, as we demonstrate empirically across an entropy-coefficient sweep and a multi-agent SAC baseline.
 We present CALM (Constrained Actor-Learning from deMonstrations), a hybrid imitation-reinforcement learning algorithm that prevents mode collapse through behavioral cloning (BC) pre-training on human driving data, followed by RL fine-tuning with a decaying KL-divergence constraint anchored to the BC prior. We derive KL and entropy bounds that formalize how the constraint preserves action diversity during training while allowing gradual reward-driven improvement.
 We evaluated CALM against five baselines---DAgger, GAIL, entropy-regularized MADDPG, QMIX-CALM, and Multi-Agent SAC---on a cooperative highway exit coordination task validated against the NGSIM naturalistic driving dataset.
 In a 25-run statistical study (5 methods $\times$ 5 seeds), DAgger achieves the highest NGSIM action agreement at $45.3\% \pm 0.9\%$ ($p < 0.001$ vs.\ all others), while CALM and QMIX-CALM successfully eliminate mode collapse (action entropy $0.70$--$0.88$ vs.\ $0.06$ for entropy-only baseline) and achieve the highest RL rewards ($1.35 \pm 0.05$).
@@ -64,7 +64,7 @@ Multi-agent reinforcement learning, mode collapse, imitation learning, cooperati
 \label{sec:intro}
 
 Connected and autonomous vehicles (CAVs) promise safer and more efficient highway traffic through cooperative maneuvers, such as coordinated lane changes and exit ramp navigation~\cite{guanetti2018control,wang2021cooperative}.
-Multiagent reinforcement learning (MARL) provides a natural framework for such problems, enabling decentralized policies that scale with the number of vehicles while being trained in a centralized manner~\cite{lowe2017multi,rashid2018qmix}.
+Multi-agent reinforcement learning (MARL) provides a natural framework for such problems, enabling decentralized policies that scale with the number of vehicles while being trained in a centralized manner~\cite{lowe2017multi,rashid2018qmix}.
 
 Despite substantial progress, a critical failure mode persists: \emph{mode collapse}, in which all agents converge to a single repeated action (e.g., ``maintain speed''), regardless of the traffic state~\cite{haarnoja2018soft}.
 In our cooperative highway-exit coordination environment, standard MADDPG training produces policies in which agents select ``Maintain'' $99.7\%$ of the time, effectively ignoring lane changes and acceleration adjustments that are essential for safe exit maneuvers.
@@ -351,6 +351,8 @@ We used the NGSIM Interstate~80 dataset~\cite{ngsim2006} collected in Emeryville
 
 \subsection{Baselines}
 
+We focused our baseline comparison on off-policy methods (MADDPG, QMIX, and the MASAC variant of SAC), because they naturally accommodate NGSIM demonstration data in their replay buffers, which enables a direct ablation of the behavioral-cloning constraint that is central to CALM. On-policy cooperative baselines such as MAPPO~\cite{yu2022surprising} are complementary but require a separate demonstration-injection mechanism (e.g., mixing expert rollouts into the on-policy batch) and are therefore deferred to future work.
+
 We compared CALM with the following methods:
 
 \begin{itemize}
@@ -491,33 +493,31 @@ This is the key finding supporting our hypothesis: \emph{generic entropy regular
 
 Fig.~\ref{fig:comparison} visualizes the three-way trade-off between agreement, entropy, and reward, with each metric shown as a separate panel for readability.
 
-\begin{figure}[t]
+\begin{figure*}[t]
     \centering
-    \begin{subfigure}[t]{\columnwidth}
+    \begin{subfigure}[t]{0.32\textwidth}
         \centering
-        \includegraphics[width=\columnwidth]{figures/action_agreement.pdf}
+        \includegraphics[width=\linewidth]{figures/action_agreement.pdf}
         \caption{NGSIM action agreement (\%).}
         \label{fig:comparison_agreement}
     \end{subfigure}
-
-    \vspace{2mm}
-    \begin{subfigure}[t]{\columnwidth}
+    \hfill
+    \begin{subfigure}[t]{0.32\textwidth}
         \centering
-        \includegraphics[width=\columnwidth]{figures/action_entropy.pdf}
+        \includegraphics[width=\linewidth]{figures/action_entropy.pdf}
         \caption{Normalized action entropy.}
         \label{fig:comparison_entropy}
     \end{subfigure}
-
-    \vspace{2mm}
-    \begin{subfigure}[t]{\columnwidth}
+    \hfill
+    \begin{subfigure}[t]{0.32\textwidth}
         \centering
-        \includegraphics[width=\columnwidth]{figures/reward_comparison.pdf}
+        \includegraphics[width=\linewidth]{figures/reward_comparison.pdf}
         \caption{Final training reward.}
         \label{fig:comparison_reward}
     \end{subfigure}
     \caption{Comparison of mode collapse mitigation methods across three metrics. Error bars show $\pm 1$ standard deviation across 5 seeds.}
     \label{fig:comparison}
-\end{figure}
+\end{figure*}
 
 Fig.~\ref{fig:significance} presents the statistical significance heatmap for all pairwise comparisons.
 
@@ -624,11 +624,7 @@ This study extends our prior work on cooperative highway exit coordination~\cite
 \section{Conclusion}
 \label{sec:conclusion}
 
-Mode collapse is a critical barrier to the deployment of multi-agent reinforcement learning in cooperative autonomous driving. When trained policies converge to repetitive and non-diverse behaviors, they fail to exhibit the adaptive and human-like decision-making required for safe and socially acceptable driving.
-
-This study presents CALM (Constrained Actor-Learning from deMonstrations), a hybrid imitation-reinforcement learning algorithm that prevents mode collapse through behavioral cloning pre-training followed by RL fine-tuning with a decaying KL-divergence constraint. We analyzed the properties of the KL constraint, revealing that it controls the divergence from the BC prior and provides a mechanism for maintaining action diversity during training.
-
-Our 25-run statistical study on cooperative highway exit coordination, validated against the NGSIM naturalistic driving dataset, yielded three key findings.
+Mode collapse is a critical barrier to the deployment of MARL in cooperative autonomous driving. This study presented CALM, a hybrid imitation-reinforcement learning algorithm that prevents this degeneracy through behavioral-cloning pre-training followed by RL fine-tuning under a decaying KL-divergence constraint anchored to the BC prior, for which we derived KL and entropy bounds that formalize how the constraint preserves action diversity during training. Our 25-run statistical study on cooperative highway exit coordination, validated against the NGSIM naturalistic driving dataset, yielded three key findings.
 
 \begin{enumerate}
     \item \textbf{DAgger achieves the highest human-likeness} with $45.3\% \pm 0.9\%$ NGSIM action agreement ($p < 0.001$), making it the preferred choice when matching human behavior is paramount.
