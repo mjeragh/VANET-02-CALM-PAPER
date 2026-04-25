@@ -1,0 +1,24 @@
+=== Author 1 (corresponding) ===
+First name: Mohammad
+Last name:  Jeragh
+Email:      mohammad.jeragh@ku.edu.kw
+ORCID:      0000-0002-1979-9997
+Affiliation: Department of Computer Engineering, College of Engineering and Petroleum, Kuwait University
+Country:    Kuwait
+Role:       Corresponding author
+
+=== Author 2 ===
+First name: Ebrahim
+Last name:  Alrashed
+Email:      ebrahim.alrashed@ku.edu.kw
+ORCID:      0000-0002-1350-9004
+Affiliation: Department of Computer Engineering, College of Engineering and Petroleum, Kuwait University
+Country:    Kuwait
+
+=== Declarations ===
+Funding:               None (no external funding)
+Conflicts of interest: None declared
+Prior publication:     Not previously published; not under review elsewhere
+Companion work:        Related manuscript on cooperative highway exit coordination is under review at Journal of Intelligent Transportation Systems (Manuscript #269158218, submitted 2026-01-13, status: With Editor)
+Data availability:     Source code and trained models will be made publicly available at https://github.com/mjeragh/VANET upon acceptance
+Ethics approval:       Not applicable (simulation-only study, no human subjects)

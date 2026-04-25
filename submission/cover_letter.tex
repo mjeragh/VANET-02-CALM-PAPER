@@ -1,0 +1,38 @@
+\documentclass[11pt]{letter}
+\usepackage[margin=1in]{geometry}
+\usepackage{parskip}
+\usepackage{hyperref}
+
+\signature{Mohammad Jeragh \\ (on behalf of all authors)}
+\address{Mohammad Jeragh \\ Department of Computer Engineering \\ College of Engineering and Petroleum \\ Kuwait University \\ P.O.~Box 5969 Safat, 13060 Kuwait \\ \href{mailto:mohammad.jeragh@ku.edu.kw}{mohammad.jeragh@ku.edu.kw}}
+
+\begin{document}
+
+\begin{letter}{Editor-in-Chief \\ IEEE Transactions on Intelligent Vehicles}
+
+\opening{Dear Editor-in-Chief,}
+
+We are pleased to submit our manuscript, \textbf{``CALM: Constrained Actor-Learning from Demonstrations for Mode Collapse Prevention in Multi-Agent Cooperative Driving,''} for consideration as a regular paper in \emph{IEEE Transactions on Intelligent Vehicles}.
+
+Multi-agent reinforcement learning (MARL) is an attractive framework for cooperative maneuvers among connected autonomous vehicles (CAVs), but policies trained on cooperative highway-exit coordination routinely collapse into a single repeated action (in our environment, ``Maintain'' is selected $99.7\%$ of the time), abandoning the lane-change and speed-adjustment behaviors that the task actually requires. Our paper makes two contributions.
+
+First, we propose CALM (Constrained Actor-Learning from deMonstrations), a hybrid imitation--reinforcement learning algorithm that prevents mode collapse by combining behavioral-cloning (BC) pre-training on NGSIM human driving data with RL fine-tuning under a decaying KL-divergence constraint anchored to the BC prior. We derive KL and entropy bounds that formalize how the constraint preserves action diversity during training while allowing gradual reward-driven improvement.
+
+Second, we conduct a 25-run statistical study (five methods $\times$ five seeds with Welch's $t$-test significance) against six baselines---DAgger, GAIL, entropy-regularized MADDPG, QMIX-CALM, Multi-Agent SAC, and a rule-based controller---validated against the NGSIM naturalistic driving dataset. DAgger attains the highest NGSIM action agreement ($45.3\% \pm 0.9\%$, $p < 0.001$), while CALM achieves the highest task reward ($1.35 \pm 0.05$) with preserved action diversity (entropy $0.88$) and the best transportation-level safety profile in our study (zero collisions, $33.3\%$ exit success, $42.5$ proximity events per episode versus $3150.5$ for DAgger). The key finding is that the distinction between \emph{human-anchored} and \emph{human-mimicking} diversity is measurable at the transportation level and matters for deployment.
+
+This manuscript is topically aligned with \emph{IEEE T-IV}'s scope on learning-based control and cooperative driving for connected autonomous vehicles. It also complements and extends our earlier work on cooperative highway exit coordination, which is currently under review at the \emph{Journal of Intelligent Transportation Systems}; the two papers use a consistent simulation environment and NGSIM validation pipeline, but the present submission's algorithmic contribution (CALM), its statistical protocol, and its safety analysis are new.
+
+We confirm that this manuscript is original, has not been published elsewhere, and is not under consideration by any other journal. All authors have approved the submission. The authors declare no competing interests or conflicts relevant to this work. The study received no external funding. The source code and trained models will be made publicly available at \url{https://github.com/mjeragh/VANET} upon acceptance.
+
+Author information:
+\begin{itemize}
+  \item Mohammad Jeragh (corresponding author), Kuwait University --- ORCID \href{https://orcid.org/0000-0002-1979-9997}{0000-0002-1979-9997}, \href{mailto:mohammad.jeragh@ku.edu.kw}{mohammad.jeragh@ku.edu.kw}
+  \item Ebrahim Alrashed, Kuwait University --- ORCID \href{https://orcid.org/0000-0002-1350-9004}{0000-0002-1350-9004}, \href{mailto:ebrahim.alrashed@ku.edu.kw}{ebrahim.alrashed@ku.edu.kw}
+\end{itemize}
+
+We appreciate your consideration and look forward to the reviewers' feedback.
+
+\closing{Sincerely,}
+
+\end{letter}
+\end{document}
