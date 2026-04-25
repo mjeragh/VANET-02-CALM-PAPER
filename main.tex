@@ -48,11 +48,7 @@ Kuwait University, Kuwait\\
 
 % ============================================================
 \begin{abstract}
-Coordinating highway exits in dense traffic requires connected autonomous vehicles to execute precise, tightly coupled lane-change and speed-adjustment maneuvers under shared safety constraints. Multi-agent reinforcement learning (MARL) offers a scalable framework for this task, but MARL policies trained in cooperative driving environments are plagued by \emph{mode collapse}: they converge to a single repeated action (e.g., selecting ``Maintain'' $99.7\%$ of the time in our environment), abandoning exactly the lane-change and acceleration behaviors that exit coordination demands, and producing vehicles whose actions human drivers cannot anticipate. Standard remedies---entropy regularization, exploration bonuses, and value-decomposition methods---fail to resolve this degeneracy in discrete-action cooperative driving, as we demonstrate empirically across an entropy-coefficient sweep and a multi-agent SAC baseline.
-We present CALM (Constrained Actor-Learning from deMonstrations), a hybrid imitation--reinforcement learning algorithm that prevents mode collapse through behavioral cloning (BC) pre-training on human driving data, followed by RL fine-tuning with a decaying KL-divergence constraint anchored to the BC prior. We derive KL and entropy bounds that formalize how the constraint preserves action diversity during training while allowing gradual reward-driven improvement.
-We evaluated CALM against five baselines---DAgger, GAIL, entropy-regularized MADDPG, QMIX-CALM, and Multi-Agent SAC---on a cooperative highway exit coordination task validated against the NGSIM naturalistic driving dataset.
-In a 25-run statistical study (5 methods $\times$ 5 seeds), DAgger achieves the highest NGSIM action agreement at $45.3\% \pm 0.9\%$ ($p < 0.001$ vs.\ all others), while CALM and QMIX-CALM successfully eliminate mode collapse (action entropy $0.70$--$0.88$ vs.\ $0.06$ for entropy-only baseline) and achieve the highest RL rewards ($1.35 \pm 0.05$).
-Our results demonstrate that anchoring MARL policies to human demonstrations via decaying KL regularization is an effective strategy for producing diverse, human-like cooperative driving behaviors.
+Coordinating highway exits in dense traffic requires connected autonomous vehicles to execute precise, tightly coupled lane-change and speed-adjustment maneuvers. Multi-agent reinforcement learning (MARL) offers a scalable framework for this task, but MARL policies trained for cooperative driving are plagued by \emph{mode collapse}: they converge to a single repeated action (selecting ``Maintain'' $99.7\%$ of the time in our environment), abandoning the lane-change and acceleration behaviors the task requires. Standard remedies---entropy regularization, exploration bonuses, and value decomposition---fail to resolve this degeneracy, as we demonstrate across an entropy-coefficient sweep and a multi-agent SAC baseline. We present CALM (Constrained Actor-Learning from deMonstrations), a hybrid imitation--reinforcement learning algorithm that prevents mode collapse through behavioral cloning (BC) pre-training on human driving data, followed by RL fine-tuning with a decaying KL-divergence constraint anchored to the BC prior. CALM is evaluated against six comparators---DAgger, GAIL, entropy-regularized MADDPG, QMIX-CALM, MASAC, and a rule-based controller---on a cooperative highway exit coordination task validated against the NGSIM naturalistic driving dataset. In a five-seed comparative study, DAgger achieves the highest NGSIM action agreement at $45.3\% \pm 0.9\%$ ($p < 0.001$ vs.\ all others), while CALM and QMIX-CALM eliminate mode collapse (action entropy $0.70$--$0.88$ vs.\ $0.06$ for the entropy-only baseline) and attain the highest RL reward among methods that preserve diversity ($1.35 \pm 0.05$). Anchoring MARL policies to human demonstrations via decaying KL regularization is an effective strategy for producing diverse, human-like cooperative driving behaviors.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -83,7 +79,7 @@ In this study, we present CALM (Constrained Actor-Learning from deMonstrations),
 \begin{enumerate}
     \item \textbf{CALM Algorithm:} We propose a two-phase approach combining BC pre-training on NGSIM human driving data with MADDPG fine-tuning under a decaying KL-divergence constraint. The constraint anchors the policy to the BC prior during early training and gradually relaxes, allowing for reward-driven improvement without mode collapse.
 
-    \item \textbf{Systematic Empirical Study:} We conduct a 25-run statistical study comparing five mode-collapse mitigation strategies (CALM, DAgger, GAIL, entropy-only, QMIX-CALM) on cooperative highway exit coordination, validated against the NGSIM naturalistic driving dataset with rigorous significance testing. We additionally analyze the properties of the decaying KL constraint, showing how it controls the divergence from human demonstrations during training.
+    \item \textbf{Systematic Empirical Study:} We conduct a comparative study (five seeds per method) of CALM against six comparators---DAgger, GAIL, entropy-regularized MADDPG, QMIX-CALM, MASAC, and a rule-based controller---on cooperative highway exit coordination, validated against the NGSIM naturalistic driving dataset with rigorous significance testing. We additionally analyze the properties of the decaying KL constraint, showing how it controls the divergence from human demonstrations during training.
 \end{enumerate}
 
 The remainder of this paper is organized as follows: Section~\ref{sec:related} reviews related work. Section~\ref{sec:formulation} formalizes the cooperative driving problem and defines mode collapse. Section~\ref{sec:method} presents the CALM algorithm and analyzes the KL constraints. Section~\ref{sec:setup} describes the experimental setup, and Section~\ref{sec:results} presents the results. Section~\ref{sec:discussion} discusses the findings. Section~\ref{sec:conclusion} concludes the paper.
@@ -109,9 +105,9 @@ BC provides strong initialization; however, it suffers from compounding errors o
 
 Dataset Aggregation (DAgger)~\cite{ross2011reduction} addresses this by iteratively collecting data from the learned policy while labeling it with expert actions, guaranteeing no-regret convergence.
 Generative Adversarial Imitation Learning (GAIL)~\cite{ho2016generative} learns a reward function via a discriminator that distinguishes expert from agent trajectories, avoiding explicit reward engineering.
-Kuefler et al.~\cite{kuefler2017imitating} and Bhattacharyya et al.~\cite{bhattacharyya2022modeling} applied GAIL specifically to driving behavior modeling 
+Kuefler et al.~\cite{kuefler2017imitating} and Bhattacharyya et al.~\cite{bhattacharyya2022modeling} applied GAIL specifically to driving behavior modeling on the NGSIM I-80 highway dataset.
 
-Several studies have explored hybrid IL+RL approaches. Hester et al.~\cite{hester2018deep} combined DQN with demonstration data (DQfD), whereas Rajeswaran et al.~\cite{rajeswaran2018learning} used demonstration-augmented policy gradient methods for dexterous 
+Several studies have explored hybrid IL+RL approaches. Hester et al.~\cite{hester2018deep} combined DQN with demonstration data (DQfD), whereas Rajeswaran et al.~\cite{rajeswaran2018learning} used demonstration-augmented policy gradient methods for dexterous manipulation tasks.
 Fujimoto et al.~\cite{fujimoto2019off} proposed BCQ for offline RL, constraining the policy to stay close to the behavior policy.
 Nair et al.~\cite{nair2020awac} introduced AWAC to accelerate online RL with offline data.
 However, none of these studies specifically addressed mode collapse prevention in cooperative multi-agent driving.
@@ -382,7 +378,7 @@ All experiments used five agents ($n=5$), discount factor $\gamma = 0.99$, soft 
 \section{Results}
 \label{sec:results}
 
-We present the results from our 25-run statistical study (five methods $\times$ five seeds), evaluating each method on NGSIM action agreement, behavioral similarity, action entropy, and task reward.
+We present the results from our comparative study (five seeds per method), evaluating each method on NGSIM action agreement, behavioral similarity, action entropy, and task reward.
 
 Fig.~\ref{fig:learning_curves} shows the training reward curves for all methods. CALM converges to the highest reward ($\sim$1.35) within 150 episodes and maintains stable performance. QMIX-CALM converges faster (within 50 episodes) to a slightly lower reward ($\sim$1.0). DAgger, as a supervised method, plateaus quickly at its lower reward level ($\sim$0.44) within 20 episodes. The entropy-only baseline exhibited high variance across seeds, reflecting its instability. Each method was trained for its convergence-appropriate horizon: DAgger for 50 episodes, QMIX-CALM for 100 episodes, and CALM, GAIL, and entropy-only for 300 episodes.
 
@@ -464,7 +460,7 @@ The action entropy column in Table~\ref{tab:agreement} directly measures mode co
 
 \textbf{DAgger achieves moderate entropy} ($0.63$), reflecting its supervised learning objective which does not explicitly encourage diversity. However, because DAgger is trained on aggregated datasets that include diverse human actions, it naturally maintains reasonable diversity.
 
-\textbf{The entropy-only baseline catastrophically fails} across all tested coefficients $\alpha_\mathrm{ent} \in \{0.001, 0.01, 0.05, 0.1, 0.5, 1.0\}$ (30 runs total, 5 seeds each). Table~\ref{tab:entropy_tuning} shows that even the strongest entropy bonus ($\alpha_\mathrm{ent} = 1.0$) achieves only $0.24 \pm 0.17$ normalized entropy, which is well below the collapse threshold of $0.1$, with extreme variance across seeds ($\pm 13.9\%$ agreement). This comprehensive sweep rules out the possibility that our original entropy-only result ($\alpha = 0.01$) is an artifact of poor hyperparameter tuning.
+\textbf{The entropy-only baseline catastrophically fails} across all tested coefficients $\alpha_\mathrm{ent} \in \{0.001, 0.01, 0.05, 0.1, 0.5, 1.0\}$ (30 runs total, 5 seeds each). Table~\ref{tab:entropy_tuning} shows that even the strongest entropy bonus ($\alpha_\mathrm{ent} = 1.0$) achieves only $0.24 \pm 0.17$ normalized entropy---far below CALM's $0.88$---with extreme variance across seeds ($\pm 13.9\%$ agreement). This comprehensive sweep rules out the possibility that our original entropy-only result ($\alpha = 0.01$) is an artifact of poor hyperparameter tuning.
 
 \begin{table}[t]
 \centering
@@ -532,7 +528,7 @@ Fig.~\ref{fig:significance} presents the statistical significance heatmap for al
 
 Although human-likeness is our primary objective, task performance remains important for practical deployment. The reward column in Table~\ref{tab:agreement} reveals an inverse relationship between the NGSIM agreement and RL reward.
 
-\textbf{CALM achieves the highest reward} ($1.35 \pm 0.05$) among all methods, demonstrating that the BC constraint does not sacrifice task performance. The decaying $\lambda(t)$ schedule allows CALM to optimize the reward while retaining the action diversity established during BC pre-training.
+\textbf{CALM achieves the highest reward} ($1.35 \pm 0.05$) among methods that preserve action diversity, demonstrating that the BC constraint does not sacrifice task performance. The decaying $\lambda(t)$ schedule allows CALM to optimize the reward while retaining the action diversity established during BC pre-training.
 
 \textbf{MASAC achieves moderate reward} ($1.08 \pm 0.18$) but with $3.6\times$ higher variance than CALM, reflecting less stable training. While SAC's automatic entropy tuning prevents mode collapse, the lack of demonstration anchoring leads to undirected exploration that is less sample-efficient than CALM's constrained approach.
 
@@ -629,12 +625,12 @@ Mode collapse is a critical barrier to the deployment of MARL in cooperative aut
 \begin{enumerate}
     \item \textbf{DAgger achieves the highest human-likeness} with $45.3\% \pm 0.9\%$ NGSIM action agreement ($p < 0.001$), making it the preferred choice when matching human behavior is paramount.
 
-    \item \textbf{CALM achieves the highest task reward} ($1.35 \pm 0.05$) while maintaining high action diversity (entropy $= 0.88$) and the best safety profile ($33.3\%$ exit success, lowest proximity events), demonstrating that the BC constraint prevents mode collapse while simultaneously improving both task performance and driving safety.
+    \item \textbf{CALM achieves the highest task reward among methods that preserve action diversity} ($1.35 \pm 0.05$, with entropy $0.88$) and the best safety profile ($33.3\%$ exit success, lowest proximity events), demonstrating that the BC constraint prevents mode collapse while simultaneously improving both task performance and driving safety.
 
     \item \textbf{Entropy regularization alone is insufficient}: the entropy-only baseline collapsed to near-zero entropy ($0.06$) despite explicit diversity incentives, and MASAC's automatic temperature tuning sustained high entropy ($0.93$) only at the cost of wildly unstable agreement ($\pm 12.7\%$ vs.\ CALM's $\pm 1.2\%$), confirming that the resulting diversity must be structured by human demonstrations rather than merely enforced by an entropy bonus. Together these results establish that incorporating human behavioral priors through constrained learning is essential for MARL policies that are simultaneously diverse, human-like, and safe.
 \end{enumerate}
 
-Future work will address several open challenges: (1)scaling CALM to larger agent populations ($>100$ vehicles) using hierarchical or mean-field approximations, (2)transferring learned policies from simulation to real vehicles via domain randomization and sim-to-real techniques, (3)extending the theoretical analysis to heterogeneous agent populations with varying objectives, and (4)investigating online adaptation mechanisms that allow policies to adjust to regional driving norms.
+Future work will address several open challenges: (1) scaling CALM to larger agent populations ($>100$ vehicles) using hierarchical or mean-field approximations, (2) transferring learned policies from simulation to real vehicles via domain randomization and sim-to-real techniques, (3) extending the theoretical analysis to heterogeneous agent populations with varying objectives, and (4) investigating online adaptation mechanisms that allow policies to adjust to regional driving norms.
 
 The code and trained models are available at \url{https://github.com/mjeragh/VANET}.
 

@@ -1,11 +1,11 @@
 # CALM Paper — IEEE T-IV Submission Packet
 
-Submission portal: https://mc.manuscriptcentral.com/t-iv
+Submission portal: https://ieee.atyponrex.com/journal/t-iv (IEEE Atypon ReX)
 
 ## Files in this folder
 
 - `cover_letter.tex` / `cover_letter.pdf` — upload `cover_letter.pdf` under the cover-letter field.
-- `abstract.txt` — plain-text abstract; paste into the abstract field (≈320 words).
+- `abstract.txt` — plain-text abstract; paste into the abstract field (~231 words; T-IV limit is 150–250).
 - `keywords.txt` — semicolon-separated keywords; paste or enter one per line per portal UI.
 - `author_info.txt` — author info, ORCIDs, and declarations to fill on the portal.
 
@@ -14,17 +14,19 @@ Submission portal: https://mc.manuscriptcentral.com/t-iv
 - `main.pdf` — compiled manuscript, 10 pages, IEEEtran journal class.
 - `main.tex`, `references.bib`, `figures/` — source for production upload if the portal asks for it.
 
-## Portal checklist
+## Portal checklist (IEEE Atypon ReX)
 
-1. Log in to ScholarOne (create account if needed).
-2. Click "Author Center" → "Start New Submission".
-3. Step 1 — Type, Title, Abstract: paper type = Regular Paper; paste title and `abstract.txt`.
-4. Step 2 — Attributes: paste/enter keywords from `keywords.txt`.
-5. Step 3 — Authors & Institutions: enter Mohammad (corresponding) and Ebrahim from `author_info.txt`.
-6. Step 4 — Reviewers: suggest 3–5 preferred reviewers (optional; see "Suggested reviewers" below).
-7. Step 5 — Details & Comments: funding = none; conflict of interest = none; cover-letter upload.
-8. Step 6 — File Upload: upload `main.pdf`. If source also required: `main.tex`, `references.bib`, `figures/*`, and `main.bbl`.
-9. Step 7 — Review & Submit: verify the merged proof, then submit.
+The Atypon ReX wizard walks you through each step; the high-level flow is:
+
+1. Log in / create an IEEE account at the portal URL above.
+2. Start a new submission for *IEEE Transactions on Intelligent Vehicles*; paper type = Regular Paper.
+3. Title & Abstract: paste from `main.tex` title and `abstract.txt`.
+4. Keywords: paste from `keywords.txt`.
+5. Authors & Affiliations: enter Mohammad (corresponding) and Ebrahim from `author_info.txt`. Atypon ReX matches affiliations against the Ringgold database.
+6. Suggested reviewers: optional for T-IV; skip or supply 3–5 names.
+7. Funding / conflicts: none; declarations as in `author_info.txt`.
+8. Upload files: `main.pdf` (required); if source is requested, also `main.tex`, `references.bib`, `figures/*`, and `main.bbl`. Upload `cover_letter.pdf` under the cover-letter field.
+9. Review the system-generated proof, then submit.
 
 ## Suggested reviewers (to be decided by authors)
 
