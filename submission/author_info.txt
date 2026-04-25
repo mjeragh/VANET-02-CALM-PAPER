@@ -10,7 +10,7 @@ Role:       Corresponding author
 === Author 2 ===
 First name: Ebrahim
 Last name:  Alrashed
-Email:      ebrahim.alrashed@ku.edu.kw
+Email:      e.alrashed@ku.edu.kw
 ORCID:      0000-0002-1350-9004
 Affiliation: Department of Computer Engineering, College of Engineering and Petroleum, Kuwait University
 Country:    Kuwait
