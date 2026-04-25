@@ -105,9 +105,9 @@ BC provides strong initialization; however, it suffers from compounding errors o
 
 Dataset Aggregation (DAgger)~\cite{ross2011reduction} addresses this by iteratively collecting data from the learned policy while labeling it with expert actions, guaranteeing no-regret convergence.
 Generative Adversarial Imitation Learning (GAIL)~\cite{ho2016generative} learns a reward function via a discriminator that distinguishes expert from agent trajectories, avoiding explicit reward engineering.
-Kuefler et al.~\cite{kuefler2017imitating} and Bhattacharyya et al.~\cite{bhattacharyya2022modeling} applied GAIL specifically to driving behavior modeling on the NGSIM I-80 highway dataset.
+Kuefler et al.~\cite{kuefler2017imitating} and Bhattacharyya et al.~\cite{bhattacharyya2022modeling} applied GAIL to driving behavior modeling on the NGSIM I-80 highway dataset.
 
-Several studies have explored hybrid IL+RL approaches. Hester et al.~\cite{hester2018deep} combined DQN with demonstration data (DQfD), whereas Rajeswaran et al.~\cite{rajeswaran2018learning} used demonstration-augmented policy gradient methods for dexterous manipulation tasks.
+Several studies have explored hybrid IL+RL approaches. Hester et al.~\cite{hester2018deep} combined a deep Q-network (DQN) with demonstration data (DQfD), whereas Rajeswaran et al.~\cite{rajeswaran2018learning} used demonstration-augmented policy gradient methods for dexterous manipulation tasks.
 Fujimoto et al.~\cite{fujimoto2019off} proposed BCQ for offline RL, constraining the policy to stay close to the behavior policy.
 Nair et al.~\cite{nair2020awac} introduced AWAC to accelerate online RL with offline data.
 However, none of these studies specifically addressed mode collapse prevention in cooperative multi-agent driving.
