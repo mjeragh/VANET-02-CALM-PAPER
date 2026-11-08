@@ -1,0 +1,39 @@
+\begin{table*}[t]
+\centering
+\caption{Action agreement with the held-out NGSIM validation split (\texttt{val.csv}, vehicle-grouped; protocol \S4) and Definition~1 entropies, all five actors scored, final checkpoints. The majority-class row is the trivial baseline no method reaches. \texttt{test.csv} has not been read.}
+\label{tab:t4_val}
+\footnotesize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Policy} & \textbf{Agreement \%} & \textbf{$\pm$ actor} & \textbf{JS} & \textbf{$H$ per-state} & \textbf{$H$ selected} & \textbf{Argmax share LL/LR/Acc/Dec/Maint} \\
+\midrule
+Majority class (constant Maintain) & 55.3 & -- & -- & 0.000 & 0.000 & 0.00/0.00/0.00/0.00/1.00 \\
+Random & 20.0 & -- & 0.420 & 1.000 & 1.000 & 0.19/0.21/0.20/0.20/0.20 \\
+Rule-based controller & 22.4 & -- & 0.486 & 0.000 & 0.641 & 0.00/0.29/0.00/0.50/0.21 \\
+\midrule
+BC prior, class-balanced (Stage 0) & 34.9 & -- & 0.269 & 0.775 & 0.878 & 0.01/0.21/0.25/0.21/0.32 \\
+BC prior, unweighted (\S8.7) & 56.2 & -- & 0.012 & 0.615 & 0.133 & 0.00/0.00/0.00/0.06/0.94 \\
+\midrule
+CALM pilot, seed 42 & 38.7 & 3.0 & 0.302 & 0.808 & 0.374 & 0.00/0.30/0.00/0.00/0.70 \\
+CALM pilot, seed 123 & 39.6 & 2.0 & 0.299 & 0.806 & 0.365 & 0.00/0.28/0.00/0.00/0.72 \\
+CALM unweighted prior, seed 42 & 55.3 & 0.0 & 0.219 & 0.372 & 0.000 & 0.00/0.00/0.00/0.00/1.00 \\
+CALM unweighted prior, seed 123 & 55.3 & 0.0 & 0.216 & 0.378 & 0.000 & 0.00/0.00/0.00/0.00/1.00 \\
+Entropy-only, seed 42 & 4.6 & 8.5 & 0.622 & 0.506 & 0.089 & 0.14/0.66/0.21/0.00/0.00 \\
+Entropy-only, seed 123 & 26.8 & 24.7 & 0.505 & 0.469 & 0.000 & 0.00/0.40/0.00/0.20/0.40 \\
+MADDPG no prior, seed 42 & 9.1 & 10.3 & 0.584 & 0.563 & 0.020 & 0.20/0.39/0.40/0.00/0.01 \\
+QMIX-CALM $n=5$, seed 42 (100 ep.) & 50.9 & 2.6 & 0.243 & 0.806 & 0.271 & 0.00/0.09/0.00/0.05/0.86 \\
+\midrule
+Option B B1 anchored, sampled-trained, seed 42 & 38.6 & 1.3 & 0.304 & 0.809 & 0.378 & 0.00/0.30/0.00/0.00/0.70 \\
+Option B B1 anchored, sampled-trained, seed 123 & 39.8 & 3.5 & 0.300 & 0.806 & 0.362 & 0.00/0.28/0.00/0.00/0.72 \\
+Option B B2 anchored, greedy-trained, seed 42 & 39.7 & 2.3 & 0.296 & 0.807 & 0.364 & 0.00/0.28/0.00/0.00/0.72 \\
+Option B B2 anchored, greedy-trained, seed 123 & 39.3 & 2.1 & 0.297 & 0.806 & 0.369 & 0.00/0.28/0.00/0.00/0.72 \\
+Option B B3 unanchored, sampled-trained, seed 42 & 16.2 & 5.7 & 0.440 & 0.632 & 0.297 & 0.07/0.29/0.44/0.14/0.05 \\
+Option B B3 unanchored, sampled-trained, seed 123 & 33.9 & 16.7 & 0.377 & 0.450 & 0.175 & 0.00/0.10/0.29/0.21/0.40 \\
+Option B B4 unanchored, greedy-trained, seed 42 & 16.4 & 5.7 & 0.436 & 0.623 & 0.325 & 0.06/0.30/0.46/0.13/0.05 \\
+Option B B4 unanchored, greedy-trained, seed 123 & 26.3 & 12.9 & 0.384 & 0.579 & 0.283 & 0.04/0.15/0.39/0.21/0.21 \\
+\bottomrule
+\end{tabular}}
+\vspace{1mm}
+\parbox{\textwidth}{\scriptsize Agreement = share of validation rows on which the policy's argmax equals the human action. $\pm$ actor = standard deviation across the five actors. JS = Jensen--Shannon divergence between the policy's argmax histogram and the human action histogram. Lane changes are 0.26\,\% of human rows, so agreement is effectively a three-class problem.}
+\end{table*}

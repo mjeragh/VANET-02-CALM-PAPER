@@ -1,0 +1,15 @@
+\begin{table*}[t]
+\centering
+\caption{The pre-registered decision rule (protocol \S8.9 rev.~2) applied to B1 vs B3 under sampled execution and mode 512: primary $\Delta H_\mathrm{sim} \geq 0.10$ and $\Delta H_\mathrm{val} \geq 0.05$ on every seed; collapse $H_\mathrm{sim} \leq 0.50$ or $H_\mathrm{val} \leq 0.60$; guards by paired bootstrap over matched episodes within seed (10,000 resamples): exits difference lower bound $\geq -0.25$, proximity ratio upper bound $\leq 1.25$. Outcome: pass.}
+\label{tab:t5b_decision}
+\footnotesize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccccc}
+\toprule
+\textbf{Seed} & \textbf{$H_\mathrm{sim}$ B1} & \textbf{$H_\mathrm{sim}$ B3} & \textbf{$\Delta H_\mathrm{sim}$} & \textbf{$H_\mathrm{val}$ B1} & \textbf{$H_\mathrm{val}$ B3} & \textbf{Exits/ep B1 vs B3, 95\,\% CI of diff.} & \textbf{Prox./km B1 vs B3, 95\,\% CI of ratio} & \textbf{Primary / exits guard / prox. guard} \\
+\midrule
+seed 42 & 0.714 & 0.254 & 0.460 & 0.809 & 0.632 & 2.56 vs 1.16, [+1.12, +1.68] & 37.4 vs 482.9, [0.061, 0.100] & pass / pass / pass \\
+seed 123 & 0.706 & 0.216 & 0.490 & 0.806 & 0.450 & 2.40 vs 1.36, [+0.70, +1.34] & 41.0 vs 121.9, [0.290, 0.385] & pass / pass / pass \\
+\bottomrule
+\end{tabular}}
+\end{table*}

@@ -1,0 +1,24 @@
+\begin{table*}[t]
+\centering
+\caption{Anchored CALM against the frozen prior it was initialised from, on matched episodes (protocol \S8.11): the Stage 0 class-balanced prior loaded into all five agents and never fine-tuned, evaluated with the Option B episode seeds under mode 512. Differences are CALM minus prior with 95\,\% paired-bootstrap intervals over episodes within seed (10,000 resamples); proximity as the ratio CALM/prior of pooled rates.}
+\label{tab:t6_frozen_prior}
+\footnotesize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Execution: arm vs prior} & \textbf{$n$} & \textbf{$H$ per-state sim} & \textbf{Exits/ep} & \textbf{Speed m/s} & \textbf{Prox./km ratio} & \textbf{Lane changes/ep} \\
+\midrule
+sampled: B1 vs prior, seed 42 & 50 & 0.734 $\to$ 0.713, [-0.028, -0.014] & 2.98 $\to$ 2.56, [-0.62, -0.24] & 11.7 $\to$ 11.9, [-1.0, +1.4] & $\times$0.770 [0.631, 0.938] & 359 $\to$ 10, [-372, -327] \\
+sampled: B1 vs prior, seed 123 & 50 & 0.728 $\to$ 0.705, [-0.031, -0.015] & 2.98 $\to$ 2.40, [-0.82, -0.34] & 12.2 $\to$ 11.2, [-1.9, +0.1] & $\times$0.905 [0.764, 1.074] & 324 $\to$ 10, [-337, -293] \\
+sampled: B2 vs prior, seed 42 & 50 & 0.734 $\to$ 0.720$^\dagger$ & 2.98 $\to$ 2.56, [-0.62, -0.24] & 11.7 $\to$ 11.8, [-1.0, +1.2] & $\times$0.787 [0.647, 0.959] & 359 $\to$ 10$^\dagger$ \\
+sampled: B2 vs prior, seed 123 & 50 & 0.728 $\to$ 0.707$^\dagger$ & 2.98 $\to$ 2.08, [-1.18, -0.64] & 12.2 $\to$ 10.4, [-2.7, -0.9] & $\times$0.984 [0.856, 1.135] & 324 $\to$ 10$^\dagger$ \\
+\midrule
+greedy: B1 vs prior, seed 42 & 50 & 0.743 $\to$ 0.649, [-0.102, -0.085] & 2.08 $\to$ 3.00, [+0.84, +0.98] & 17.4 $\to$ 24.5, [+6.3, +7.8] & $\times$0.125 [0.110, 0.143] & 259 $\to$ 10, [-269, -232] \\
+greedy: B1 vs prior, seed 123 & 50 & 0.739 $\to$ 0.636, [-0.114, -0.091] & 2.08 $\to$ 3.00, [+0.84, +0.98] & 17.3 $\to$ 24.5, [+6.4, +8.1] & $\times$0.120 [0.103, 0.143] & 248 $\to$ 10, [-254, -223] \\
+greedy: B2 vs prior, seed 42 & 50 & 0.743 $\to$ 0.666$^\dagger$ & 2.08 $\to$ 3.00, [+0.84, +0.98] & 17.4 $\to$ 24.5, [+6.3, +7.8] & $\times$0.125 [0.110, 0.143] & 259 $\to$ 10$^\dagger$ \\
+greedy: B2 vs prior, seed 123 & 50 & 0.739 $\to$ 0.658$^\dagger$ & 2.08 $\to$ 3.00, [+0.84, +0.98] & 17.3 $\to$ 24.5, [+6.4, +8.0] & $\times$0.120 [0.104, 0.142] & 248 $\to$ 10$^\dagger$ \\
+\bottomrule
+\end{tabular}}
+\vspace{1mm}
+\parbox{\textwidth}{\scriptsize $^\dagger$B2's per-episode step log was overwritten by a later arm (protocol \S8.10 caveat); its entropy and lane changes are the per-seed summary values without an interval. B1 was re-evaluated with its own log, identical to the 4 November run. Under sampled execution the prior has equal-or-higher per-state entropy, more exits and the same speed; proximity favours CALM on seed 42 only. Under greedy execution B1 and B2 are the constant Lane\_Right policy (Table~\ref{tab:t3_gate}).}
+\end{table*}
