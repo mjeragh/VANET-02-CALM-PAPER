@@ -6,7 +6,7 @@
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lcccccccc}
 \toprule
-\textbf{Contract, execution: policy} & \textbf{$n$} & \textbf{Exit \%} & \textbf{Speed m/s} & \textbf{Prox./agent-km} & \textbf{$H$ per-state} & \textbf{$H$ selected} & \textbf{Lane changes L / R} & \textbf{Lane-0 share} \\
+\textbf{Contract, execution: policy} & \textbf{$n$} & \textbf{Exit \%} & \textbf{Speed m/s} & \textbf{Prox./agent-km} & \textbf{$H$ per-state} & \textbf{$H$ selected} & \textbf{Exit agents' R moves: policy / SUMO} & \textbf{Lane-0 share} \\
 \midrule
 SUMO default, greedy: CALM (class-balanced prior) & 100 & 100.0 & 25.3 & 7.5 & 0.65 & 0.01 & 555 / 0 & 0.96 \\
 SUMO default, greedy: CALM (unweighted prior) & 100 & 100.0 & 27.2 & 6.2 & 0.44 & 0.00 & 0 / 553 & 0.50 \\
@@ -38,5 +38,5 @@ mode 512, sampled: MADDPG, no prior & 50 & 100.0 & 23.8 & 29.7 & 0.36 & 0.84 & 5
 \bottomrule
 \end{tabular}}
 \vspace{1mm}
-\parbox{\textwidth}{\scriptsize Per-state entropy is the mean normalised entropy of the policy distribution over visited states; selected-action entropy is the normalised entropy of the executed-action histogram. Under SUMO default, greedy class-balanced-prior CALM reproduces constant Lane\_Right and greedy unweighted-prior CALM reproduces constant Maintain and the SUMO default to the decimal. Under mode 512 the stranded reference policies (constant Maintain, SUMO default) exit 7\,\% and expose two orders of magnitude more proximity per km. QMIX-CALM has no per-state entropy (argmax policy).}
+\parbox{\textwidth}{\scriptsize Per-state entropy is the mean normalised entropy of the policy distribution over visited states; selected-action entropy is the normalised entropy of the executed-action histogram. ``Exit agents' R moves'' counts the exit-assigned agents' rightward lane transitions over all episodes of the row, split into those the policy commanded and those SUMO's lane-change model made. Under SUMO default, greedy class-balanced-prior CALM reproduces constant Lane\_Right and greedy unweighted-prior CALM reproduces constant Maintain and the SUMO default to the decimal. Under mode 512 the stranded reference policies (constant Maintain, SUMO default) exit 7\,\% and expose two orders of magnitude more proximity per km. QMIX-CALM has no per-state entropy (argmax policy).}
 \end{table*}
