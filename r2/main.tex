@@ -8,6 +8,7 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{booktabs}
+\usepackage{array}
 \usepackage{multirow}
 \usepackage{xcolor}
 \usepackage{hyperref}
@@ -55,13 +56,10 @@ Contributions:
 \label{sec:background}
 \todo{CALM as submitted: BC prior, decaying KL anchor, Definition 1, Theorem 1 kept; Proposition 1 removed (plan A8). KL-to-prior fine-tuning: AWAC, BRAC, TD3+BC, KL-regularised RLHF. Evaluation pitfalls in deep RL; IL evaluation leakage; SUMO safety layers.}
 
-\section{The Submitted Pipeline and Its Defects}
-\label{sec:defects}
-\todo{Table T1 (hand-written): defect, mechanism, effect on the reported number, fix, record reference. Sources: protocol \S1, \S4b--\S4d; plan \S2b, \S2c, \S9.}
+\input{sections/03_defects}
+\input{tables/T1_defects}
 
-\section{Corrected Evaluation Contract}
-\label{sec:contract}
-\todo{bc4 schema and bc action order; vehicle-grouped split, val.csv for all selection, test.csv frozen; three entropy quantities and the Definition 1 estimator; execution rule declared; agent\_lane\_change\_mode=512; direct collisions and teleports apart; proximity per agent-km; the three reference policies; matched episode seeds and paired bootstrap.}
+\input{sections/04_contract}
 
 \section{Results}
 \label{sec:results}

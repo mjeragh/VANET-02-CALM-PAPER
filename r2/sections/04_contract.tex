@@ -1,0 +1,71 @@
+% Section 4: corrected evaluation contract.
+% Evidence: VANET protocol §2–§5, §8.1–§8.5, §8.8 preamble, §8.9 (design, evaluation, bootstrap), §8.11 preamble.
+\section{Corrected Evaluation Contract}
+\label{sec:contract}
+
+Every number in Section~\ref{sec:results} was produced under the contract below. The contract is recorded in each training run's manifest, in the header of its training log and in every checkpoint it writes (observation schema, action order, lane direction, lane grid, lane-change mode, action-selection rule, git commit and seed), and both evaluators refuse a checkpoint whose recorded contract does not match the one they are asked to apply. The unit tests that pin each item run without the simulator.
+
+\subsection{One observation space and one action order}
+\label{sec:contract_obs}
+
+\paragraph{Observation.}
+The policy input in the simulator \emph{is} the projection $\phi_{\mathrm{BC}}$ onto the four features the prior was cloned on: lane position, velocity, distance to the exit and headway, each normalised to $[0,1]$ as in the dataset. The lane feature uses the dataset's grid: SUMO lane $k$ of the four-lane segment is mapped to NGSIM Lane~$6-k$ and encoded as $(\mathrm{Lane\_ID}-1)/6$, so the four simulator lanes read as Lanes 6 to 3, the rightmost through lane of the recording and the three to its left. The cloned prior, the warm-started actor, the frozen KL reference, the NGSIM validator and the safety evaluator all consume this one vector. The reward is computed from the raw simulator state, not from the policy input.
+
+\paragraph{Action order.}
+Actors emit probabilities in the NGSIM order; the environment converts each sampled or argmax index to the simulator's action with a fixed map at its boundary, so the KL term compares like with like without any permutation, and the NGSIM validator compares the actor's vector with the human label directly. ``Left'' executes toward the median. Tests pin that the index maps are mutual inverses and that the prior's Maintain executes as SUMO's keep.
+
+\paragraph{Warm start.}
+When a prior is given, its weights are copied into every actor and every target network before the first episode, so an anchored and an unanchored run can start from identical parameters.
+
+\subsection{Data: a vehicle-grouped split with a frozen test set}
+\label{sec:contract_data}
+
+The 47{,}874 rows (567 vehicles) of the discretised Interstate~80 file were split by vehicle into training, validation and test sets of 70/15/15\,\% of the vehicles, stratified by each vehicle's dominant action and row-count tercile: 396 vehicles (31{,}476 rows), 87 (8{,}143) and 84 (8{,}255). An automated check verifies zero vehicle overlap and zero identical feature rows between any two splits, records the SHA-256 of each file in a manifest against which every consumer is checked, and reports action-share parity (maximum deviation from the full file 1.7 points, on the test split) and nearest-neighbour feature distances (median within-train leave-one-out 0.0022; validation-to-train 0.0128; test-to-train 0.0147). Because the file comes from one recording, 91\,\% of validation and 77\,\% of test vehicles overlap some training vehicle's time window; features are ego-centric and we state this rather than claim temporal independence. The validation split has Maintain 55.3\,\%, Decelerate 22.9\,\%, Accelerate 21.6\,\%, Lane\_Right 0.22\,\% and Lane\_Left 0.01\,\%.
+
+The prior is cloned on the training split with early stopping on the validation split; every learning curve, every checkpoint score and every decision in this paper uses the validation split; the test split is frozen. Its labels were read once, before the evaluation rules were fixed, for the $k$-NN leave-one-vehicle-out diagnostic reported in Section~\ref{sec:defects_ngsim}; that access is logged and no model, hyper-parameter or protocol choice depended on it. The claim available to this paper is therefore ``no model selection consulted the test split'', not ``untouched''. \todo{If the one-time test-split scoring of the final checkpoints is approved, state here that it was performed once, after every table was final, and name the tables; otherwise delete this note and leave the agreement tables on \texttt{val.csv}.}
+
+\subsection{The prior}
+\label{sec:contract_prior}
+
+The prior is a \emph{class-balanced} imitation policy, as in the submitted method: the cross-entropy loss uses inverse-frequency class weights, so lane changes, 0.26\,\% of the labels, are up-weighted by two to three orders of magnitude relative to Maintain. Its probabilities are therefore not human action frequencies. On the training split its argmax is Lane\_Right in 18.8\,\% of states against 0.2\,\% for the humans, and Maintain in 26.3\,\% against 54.3\,\%; on the validation split it agrees with the human label in 34.85\,\% of states, has Jensen--Shannon divergence 0.269 from the human marginal and per-state entropy 0.775. The trainer saves the weights of the epoch with the lowest class-weighted validation loss (computed batch-invariantly as $\sum w\ell / \sum w$), under a fixed seed, and records the split hashes, the seed, the weight vector and the restored epoch in the checkpoint. An \emph{unweighted} prior, trained identically without class weights, is a declared ablation: it matches the human marginal (Jensen--Shannon 0.012) and its argmax is Maintain in 94\,\% of states.
+
+\subsection{Three entropy quantities and one selection rule}
+\label{sec:contract_entropy}
+
+For a policy with softmax output $\pi(\cdot\,|\,o)$ over the five actions and a set of observations $\mathcal{O}$ we report, each normalised by $\log 5$:
+\begin{itemize}
+  \item the \emph{per-state entropy} $\frac{1}{|\mathcal{O}|}\sum_{o\in\mathcal{O}} \mathcal{H}(\pi(\cdot\,|\,o))$, the estimator of Definition~1;
+  \item the entropy of the \emph{mean probability vector} $\mathcal{H}\big(\frac{1}{|\mathcal{O}|}\sum_o \pi(\cdot\,|\,o)\big)$;
+  \item the \emph{selected-action entropy}, the entropy of the histogram of actions chosen under the declared selection rule---the quantity the submitted paper reported.
+\end{itemize}
+Probabilities are the actors' softmax outputs; no second softmax is applied. On the NGSIM validation split $\mathcal{O}$ is the set of human states and the selection rule is argmax, for every policy, the prior included; over simulator rollouts $\mathcal{O}$ is the set of agent-steps, the policy's probability vector being logged at each step, so Definition~1 is estimated on the states the policy itself visits under the declared execution rule. Every one of the five actors is scored; agreement, divergence and the three entropies are reported as the mean across actors with the spread beside it, each entropy computed per actor before averaging. For QMIX, which executes greedily, the ``per-state entropy'' is that of $\mathrm{softmax}(Q/\tau)$, a proxy for the spread of action values and not the entropy of an execution policy; the selected-action entropy is the behaviourally meaningful one for QMIX and is labelled so.
+
+\subsection{A declared execution rule}
+\label{sec:contract_exec}
+
+MADDPG's action selection during training is \emph{sampled} from the actor's softmax whenever a BC coefficient, an entropy coefficient or a non-default temperature is set, and greedy with $\epsilon$-exploration otherwise---so in the corrected study's first runs (Section~\ref{sec:collapse}) the anchored and the entropy-regularised methods sampled while unconstrained MADDPG did not, and the submitted paper never stated the rule. The corrected code decouples the rule from the regularisers (\texttt{--act-sampling} sampled or greedy) and records it. At evaluation the rule is declared separately (\texttt{--execution} sampled or greedy); \emph{sampled} is the rule the anchored policy trains with and is the primary rule in Section~\ref{sec:results}, and greedy results are reported apart and never mixed with sampled ones in a table. Section~\ref{sec:concealed} shows how far the two rules diverge for the same checkpoint.
+
+\subsection{Policy-attributable lane changes}
+\label{sec:contract_lc}
+
+Agent vehicles are inserted with SUMO lane-change mode 512: no autonomous lane change, while a lane change requested by the policy through TraCI still respects other drivers' gaps, so the simulator's safety layer is kept and only the decision to move is the policy's. Of the first segment's four lanes only lane~0 connects to the exit ramp, so under this mode an exit agent that departs in lanes 1--3 reaches the ramp only if the policy commands the move; exit success becomes a statement about the policy. The evaluator logs every lane transition and whether it was commanded, and reports commanded and uncommanded transitions, left and right, together with the share of mainline time spent in lane~0. Both the training environment and the evaluator apply the mode, and the mode is part of the recorded contract.
+
+\subsection{Safety accounting}
+\label{sec:contract_safety}
+
+The evaluator tracks each agent from pending through active to exited and reports how many departed. \emph{Exit success} is the fraction of the three exit-assigned agents whose last edge was a ramp edge when they left the network; exits per episode (0--3) is reported beside it. \emph{Direct collisions} (SUMO's collision list) and \emph{teleports} are counted apart, and both are interpreted as properties of the simulator's car-following layer rather than of the policy (Section~\ref{sec:concealed}). A \emph{proximity event} is an agent--vehicle pair closer than 5\,m at a simulation step, summed over agents and steps; it is reported as a raw count per episode, per 1{,}000 agent-steps and per agent-kilometre, the last as the pooled rate $\sum\text{events}/\sum\text{agent-km}$ because slow and stranded policies accumulate steps without distance. Average speed is computed over every agent present in the simulation. Every simulator figure in this paper states the lane-change mode and the execution rule under which it was measured.
+
+\subsection{Reference policies}
+\label{sec:contract_refs}
+
+Three policies that learn nothing are run through the same evaluator on the same episodes: \emph{constant Maintain}, \emph{constant Lane\_Right} and \emph{SUMO default}, in which no action is ever commanded. Under the default lane-change mode the first and the third coincide; under mode 512 constant Maintain and SUMO default are do-nothing policies and constant Lane\_Right is the optimal exit policy of this network. On the NGSIM side the \emph{majority class}, constant Maintain, is a row in every agreement table (55.3\,\% on the validation split), with the uniform-random and the submitted rule-based policy beside it.
+
+\subsection{Matched episodes, checkpoints and inference}
+\label{sec:contract_stats}
+
+Each training run is evaluated at its final checkpoint (episode 300 for MADDPG, 100 for QMIX); checkpoints every 50 episodes are scored on the validation split for learning curves only, and no checkpoint is selected on any score. Simulator evaluation uses 50 episodes per checkpoint with episode seed $s\times10^4+e$ for training seed $s$ and episode index $e$, so every arm, every reference policy and the frozen prior see the same 50 traffic realisations for a given training seed. Where two policies are compared, the comparison is paired over episodes within a training seed: 10{,}000 bootstrap resamples of matched episode pairs, with the proximity rate recomputed as a pooled ratio inside each resample, give 95\,\% intervals for differences in entropy, exits and speed and for the ratio of proximity rates. An episode is the unit; vehicle-steps are not treated as independent. The intervals describe the evaluation uncertainty of the trained checkpoints and do not remove the limitation that the isolation of Section~\ref{sec:anchor} rests on two training seeds. The decision rule for that isolation---thresholds, guards and the wording each outcome permits---was written and reviewed before any of its runs and is reproduced in Section~\ref{sec:anchor}.
+
+\subsection{Reporting rules}
+\label{sec:contract_report}
+
+Reward is a training statistic: the mean over the last 50 training episodes, with exploration, under the arm's training rule; the evaluator returns none, and no reward figure is presented as an evaluation outcome. Seeds, episode counts, agent counts and the contract items above are stated for every table. Nothing measured on the submitted pipeline is used as a comparator for the corrected runs: the historical numbers appear only in Section~\ref{sec:concealed}, beside their re-measurement, and in the appendix, labelled as measurements of the defective pipeline.
