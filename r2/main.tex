@@ -20,6 +20,10 @@
 
 \newcommand{\KL}{\mathrm{KL}}
 \newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cS}{\mathcal{S}}
+\newcommand{\cO}{\mathcal{O}}
 \newcommand{\todo}[1]{\textcolor{red}{[#1]}}
 
 \begin{document}
@@ -40,21 +44,9 @@ We previously reported that CALM, a multi-agent reinforcement learning (MARL) me
 Multi-agent reinforcement learning, behavioural cloning, mode collapse, evaluation methodology, SUMO, NGSIM, reproducibility
 \end{IEEEkeywords}
 
-\section{Introduction}
-\todo{Plan \S2 row 1. The submitted claims (review \S2 table), what the corrected evaluation found, honest framing as the correction of our own study.}
+\input{sections/01_intro}
 
-Contributions:
-\begin{enumerate}
-  \item A defect catalogue for an imitation-plus-RL driving pipeline, each defect with its measured effect on the reported numbers (Section~\ref{sec:defects}).
-  \item Three identity results that any such study must check: greedy evaluation of the anchored policy equals the constant Lane\_Right policy; zero collisions equals SUMO's car-following, for every policy; NGSIM action agreement below the majority baseline for every method (Section~\ref{sec:concealed}).
-  \item A pre-registered isolation of the anchoring effect: fixed initialisation, one training and evaluation contract, matched episode seeds, a decision rule written before the runs (Section~\ref{sec:anchor}).
-  \item The frozen-prior control on the same matched episodes (Section~\ref{sec:prior}).
-  \item A testability checklist for the MultiExit + NGSIM benchmark and a reporting checklist for SUMO + NGSIM evaluations (Section~\ref{sec:testability}).
-\end{enumerate}
-
-\section{Background and Related Work}
-\label{sec:background}
-\todo{CALM as submitted: BC prior, decaying KL anchor, Definition 1, Theorem 1 kept; Proposition 1 removed (plan A8). KL-to-prior fine-tuning: AWAC, BRAC, TD3+BC, KL-regularised RLHF. Evaluation pitfalls in deep RL; IL evaluation leakage; SUMO safety layers.}
+\input{sections/02_background}
 
 \input{sections/03_defects}
 \input{tables/T1_defects}

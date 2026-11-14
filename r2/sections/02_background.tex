@@ -1,0 +1,62 @@
+% Section 2: CALM as submitted (kept, corrected) and related work. Evidence: submitted main.tex §III–IV (formulation,
+% Definition 1, method, Theorem 1); ESWA plan §2e / A8 (Proposition 1 removed); plan §2 row 2 for the related-work lines.
+\section{Background and Related Work}
+\label{sec:background}
+
+\subsection{The task and the method as submitted}
+\label{sec:bg_method}
+
+\paragraph{Formulation.}
+Cooperative highway-exit coordination is modelled as a decentralised partially observable Markov decision process~\cite{oliehoek2016concise} with $n=5$ vehicle agents, each with the discrete action set $\cA=\{$Lane\_Left, Lane\_Right, Accelerate, Decelerate, Maintain$\}$, a local observation $o_i$, transitions supplied by the SUMO simulator~\cite{lopez2018microscopic}, a shared reward and discount $\gamma=0.99$. Each agent holds a stochastic policy $\pi_i(\cdot\,|\,o_i)=\mathrm{softmax}(z_i(o_i)/\tau)$ given by an actor network, and the joint policy is trained by MADDPG~\cite{lowe2017multi}, centralised critics with decentralised actors. The reward is the hybrid $R=\alpha R_{\mathrm{local}}+\beta R_{\mathrm{global}}$ with $\alpha=0.7$, $\beta=0.3$: the local term penalises collisions ($-5$), unsafe following distances ($-1$) and lane changes ($-0.5$) and rewards speed; the global term rewards mean traffic speed and penalises density above a threshold. In the MultiExit network three of the five agents are assigned an exit ramp and two are mainline vehicles; Section~\ref{sec:testability} states the facts of that network which the submitted paper did not.
+
+\paragraph{Mode collapse.}
+The submitted paper defined mode collapse by the per-observation entropy of the policy and we keep the definition.
+\begin{definition}[Mode collapse]
+\label{def:collapse}
+Policy $\pi_i$ exhibits mode collapse if
+\begin{equation}
+\E_{o\sim d^{\pi_i}}\big[\mathcal{H}(\pi_i(\cdot\,|\,o))\big]<\epsilon_{\mathrm{mc}},
+\end{equation}
+where $d^{\pi_i}$ is the state-visitation distribution under $\pi_i$, $\mathcal{H}$ is the Shannon entropy normalised by $\log|\cA|$, and $\epsilon_{\mathrm{mc}}>0$ is a threshold.
+\end{definition}
+The quantity on the left is an expectation over states of a per-state entropy. What the submitted paper measured and reported under the name ``action entropy'' was the entropy of the histogram of the actions a policy selected over the dataset, which is a different quantity: a policy that is deterministic in every state but chooses different actions in different states has zero per-state entropy and a broad histogram, and five deterministic actors frozen on five different actions have a broad pooled histogram. Section~\ref{sec:contract_entropy} names the three quantities and fixes the estimator of Definition~\ref{def:collapse} (the mean per-state entropy over held-out human states, and over the states the policy visits in the simulator under a declared execution rule); the thresholds used for the word ``collapsed'' in this paper are set in Section~\ref{sec:anchor}, before the runs they judge.
+
+\paragraph{CALM.}
+The method has two phases. A prior $\pi_{\mathrm{BC}}$ is cloned from NGSIM state--action pairs by minimising a class-weighted cross-entropy (Section~\ref{sec:contract_prior}), copied into every actor and target network, and a frozen copy is kept. The actors are then fine-tuned by MADDPG under the loss
+\begin{equation}
+\mathcal{L}_{\mathrm{CALM}}(\theta_i)=-J_{\mathrm{PG}}(\theta_i)+\lambda(t)\,D_{\KL}\!\big(\pi_{\theta_i}\,\|\,\pi_{\mathrm{BC}}\big),
+\label{eq:calm}
+\end{equation}
+with $\lambda(t)=\lambda_0\delta^{t}$, $J_{\mathrm{PG}}$ the MADDPG policy-gradient objective, the KL term the expectation over replayed observations of $\sum_a\pi_{\theta_i}(a|o)\log[\pi_{\theta_i}(a|o)/\pi_{\mathrm{BC}}(a|o)]$, $\lambda_0=2.0$ and $\delta=0.999$ per episode, so $\lambda(300)\approx1.48$: the anchor is never near zero within the training horizon used. QMIX-CALM applies the same penalty to $\mathrm{softmax}(Q_i/\tau)$ of QMIX's per-agent value networks~\cite{rashid2018qmix}, averaged over agents; it executes greedily and is reported descriptively in this paper (one seed, 100 episodes).
+
+\paragraph{What is kept of the analysis.}
+The submitted paper gave two results about~\eqref{eq:calm}. The first is sound and we keep it.
+\begin{theorem}[KL bound]
+\label{thm:kl}
+Let $\pi_t^{*}$ minimise $\mathcal{L}_{\mathrm{CALM}}$ in episode $t$ and let $|J_{\mathrm{PG}}(\theta)|\le J_{\max}$ for all $\theta$. Then $D_{\KL}(\pi_t^{*}\,\|\,\pi_{\mathrm{BC}})\le 2J_{\max}/\lambda(t)$.
+\end{theorem}
+\begin{proof}
+$\mathcal{L}_{\mathrm{CALM}}(\pi_t^{*})\le\mathcal{L}_{\mathrm{CALM}}(\pi_{\mathrm{BC}})$ and $D_{\KL}(\pi_{\mathrm{BC}}\,\|\,\pi_{\mathrm{BC}})=0$ give $\lambda(t)D_{\KL}(\pi_t^{*}\,\|\,\pi_{\mathrm{BC}})\le J_{\mathrm{PG}}(\pi_t^{*})-J_{\mathrm{PG}}(\pi_{\mathrm{BC}})\le 2J_{\max}$.
+\end{proof}
+The second, a lower bound on the entropy of $\pi_t^{*}$ obtained from Theorem~\ref{thm:kl} through Pinsker's inequality and a claimed Lipschitz continuity of entropy in total variation with constant $2\log|\cA|$, is withdrawn: entropy is not Lipschitz in total variation on a finite alphabet (the Fannes--Audenaert inequality has a non-linear term near zero~\cite{cover2006elements}), and at the paper's $\lambda_0$ and any realistic $J_{\max}$ the bound is vacuous. Theorem~\ref{thm:kl} says only that the anchored policy cannot move far from the prior while $\lambda(t)$ is large; whether it moves anywhere useful is the empirical question of Sections~\ref{sec:anchor} and~\ref{sec:prior}.
+
+\paragraph{The NGSIM side.}
+The prior is cloned from the NGSIM Interstate~80 recording~\cite{ngsim2006,colyar2007us}, a congested bottleneck with a mean speed near 6\,m/s, discretised following~\cite{thiemann2008estimating} into the five actions: a lane-index change between consecutive samples is a lane change, longitudinal acceleration beyond $\pm0.5$\,m/s$^2$ is Accelerate or Decelerate, the remainder is Maintain, lane changes taking priority. The file has 47{,}874 rows from 567 vehicles; Maintain is 54.8\,\% of the labels and the two lane changes together 0.26\,\%. The second figure is the one that matters for any ``agreement'' metric: the class a policy must get right to look human is the one the task is about, and it almost never occurs. Section~\ref{sec:contract_data} gives the split and Section~\ref{sec:agreement} the consequence.
+
+\subsection{Related work}
+\label{sec:bg_related}
+
+\paragraph{KL-regularised fine-tuning of a prior.}
+The anchor in~\eqref{eq:calm} belongs to a well-populated family. Offline and offline-to-online RL constrain the learned policy to a behaviour or pretrained policy by a KL or related penalty---BCQ~\cite{fujimoto2019off}, BRAC~\cite{wu2019brac}, AWAC~\cite{nair2020awac}, TD3+BC~\cite{fujimoto2021minimalist}---and the same device, KL control towards a pretrained reference, underlies sequence-model fine-tuning~\cite{jaques2017sequence,ziegler2019finetuning,ouyang2022training}. Two habits of that literature are relevant here. It compares the fine-tuned policy against the prior it started from, and TD3+BC in particular reports the behaviour-cloning policy as a baseline rather than an initialisation; and it treats the penalty's weight as a dial between the prior and the reward rather than as a guarantee of anything. Our frozen-prior control (Section~\ref{sec:prior}) is the first of those habits applied to our own method; its result---that the anchored policy does not improve on the prior on any declared measure---is the kind of outcome that literature expects to be checked for.
+
+\paragraph{Mode collapse and entropy.}
+Entropy bonuses~\cite{haarnoja2018soft,ahmed2019understanding}, diversity objectives~\cite{eysenbach2019diversity} and exploration bonuses~\cite{tang2017exploration} are the standard remedies for policies that collapse to a few actions, and multi-agent non-stationarity is held to make collapse worse~\cite{zhang2021multi}. The submitted paper claimed that entropy regularisation fails to prevent collapse in this task across coefficients; the corrected study retrained one coefficient ($\alpha=0.01$) on two seeds, which collapsed, and makes no claim about the sweep. What the corrected study adds to this literature is not a remedy but a measurement lesson: under the quantity the literature means by entropy, five actors each frozen on a different action look diverse to a pooled histogram (Section~\ref{sec:collapse}).
+
+\paragraph{Imitation, RL and NGSIM in driving.}
+Behavioural cloning~\cite{pomerleau1991efficient,bojarski2016end,codevilla2018end}, DAgger~\cite{ross2011reduction} and GAIL~\cite{ho2016generative} are the imitation baselines of the driving literature, and GAIL has been fitted to NGSIM I-80 trajectories directly~\cite{kuefler2017imitating,bhattacharyya2022modeling}; combining an imitation prior with RL for robustness is now common~\cite{hester2018deep,rajeswaran2018learning,lu2023imitation}. MARL has been applied to lane changing, merging and intersections~\cite{zhou2020multi,shou2020multi,chen2020cooperative,chu2019multi,haydari2020deep,li2023reinforcement}, almost always with aggregate reward and success metrics and without reference policies that learn nothing. The NGSIM recordings are the standard naturalistic reference~\cite{ngsim2006,colyar2007us,montanino2015trajectory,wu2023human}, and they are a recording of congested human traffic, not of the free-flow exit task the simulator poses; Section~\ref{sec:testability} draws the consequence for what ``human-like'' can mean in this benchmark.
+
+\paragraph{Evaluation pitfalls.}
+That deep-RL results depend on seeds, implementation details and reporting choices to a degree that undermines comparisons has been documented repeatedly~\cite{henderson2018deep,colas2018seeds,agarwal2021precipice}, with the recommendations we follow: state the number of seeds, report interval estimates over the unit that is actually independent, and do not select on the test measure. Leakage between training and evaluation data has its own literature~\cite{kaufman2012leakage,kapoor2023leakage}: our in-sample NGSIM comparison (D7) is the textbook case, rows of the same vehicles on both sides, and the vehicle-grouped split with logged test access is the textbook remedy. For driving specifically, offline agreement with recorded human actions is known to correlate weakly with closed-loop behaviour~\cite{codevilla2018offline}; our finding that no method beats the majority class on agreement, while the same methods differ sharply in the simulator, is one more instance. We add three pitfalls we have not seen catalogued: an agent-tracking rule that silently drops agents, a simulator driver model that performs the policy's manoeuvres for it, and an entropy estimator that cannot see per-state determinism.
+
+\paragraph{The simulator's safety layer.}
+SUMO's default vehicle model is collision-free by construction---the Krau{\ss} car-following model brakes every vehicle to a safe gap~\cite{krauss1998microscopic}---and its lane-change model~\cite{erdmann2015lane} both initiates lane changes on its own and refuses requested ones when the gap is unsafe; which of these behaviours apply to an externally controlled vehicle is set per vehicle by a lane-change mode. A learned policy driving through TraCI therefore runs behind a safety layer of the kind the safe-RL literature calls a shield~\cite{alshiekh2018safe,garcia2015comprehensive}, with two consequences that evaluations in SUMO rarely state: collision counts measure the shield, not the policy, and, under the default mode, so do lane changes and whatever depends on them, exit success included. Section~\ref{sec:contract_lc} fixes the mode so that the decision to change lanes is the policy's while the gap check remains the simulator's, and Section~\ref{sec:concealed} shows what each setting measured.
