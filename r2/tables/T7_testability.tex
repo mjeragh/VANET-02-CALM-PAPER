@@ -1,0 +1,24 @@
+% T7: hand-written (not produced by make_r2_tables.py). Source: VANET PAPER2_SCOPE_REVIEW.md §4; protocol §8.6–§8.11.
+\begin{table*}[!t]
+\centering
+\footnotesize
+\caption{What the MultiExit\,+\,NGSIM benchmark can and cannot measure, with the evidence in this paper for each verdict.}
+\label{tab:t7_testability}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.19\textwidth}>{\raggedright\arraybackslash}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.49\textwidth}>{\raggedright\arraybackslash}p{0.13\textwidth}@{}}
+\toprule
+Quantity & Measurable here? & Why & Evidence \\
+\midrule
+Per-state entropy on held-out human states (Definition~\ref{def:collapse}) & Yes & A dataset-level quantity, independent of the simulator; computed per actor from the softmax output on a vehicle-grouped validation split under a recorded contract. & \S\ref{sec:agreement}, \S\ref{sec:anchor} \\
+Per-state entropy over simulator rollouts & Yes, under a declared execution rule & Greedy rollouts of the anchored policy visit the constant policy's states (0.64--0.66); sampled rollouts give 0.71. The rule changes the states visited and must be fixed in advance. & \S\ref{sec:concealed}, \S\ref{sec:anchor} \\
+Resistance to collapse against a matched control & Yes & Fixed initialisation, one lane-change mode for training and evaluation, one selection rule per arm, matched episode seeds, paired bootstrap, a decision rule written first. & \S\ref{sec:anchor} \\
+Improvement over the frozen prior & Yes & The prior is a policy and can be run through the same evaluator on the same episodes. & \S\ref{sec:prior} \\
+Proximity exposure per agent-km; speed & As behaviour descriptors only & They track speed and lane behaviour (sampled policies three to five times greedy ones, oscillators ten times, stranded policies a hundred times) and are meaningful only beside the constant-action and SUMO-default rows; they are not safety outcomes. & \S\ref{sec:concealed} \\
+Exit success & As a one-bit test & Only lane~0 reaches the ramp, so ``always move right'' is optimal for an exit agent; under mode 512 exit success measures whether a policy commands rightward moves, not how well agents coordinate. Under SUMO's default mode it measures SUMO. & \S\ref{sec:concealed} \\
+Human-likeness of behaviour & No & Agreement is a three-class problem with a 55.3\,\% trivial baseline that no method reaches; lane changes are 0.26\,\% of the labels; the recording is congested traffic near 6\,m/s and the simulated task is free-flow, so there is no behavioural human reference inside the simulator. & \S\ref{sec:agreement} \\
+Collisions & No & SUMO's car-following and gap enforcement prevent them for every policy, stranded and oscillating ones included: none in roughly 4{,}100 episodes. & \S\ref{sec:concealed} \\
+Cooperation & No & No metric measures interaction between agents; two of the five agents have no task; nothing distinguishes a coordinated solution from five independent constant policies. & \S\ref{sec:testability} \\
+Reward & Training statistic only & The evaluator returns none; last-episode training means under exploration are comparable across arms trained under one contract and are not deployment performance. & \S\ref{sec:reward} \\
+\bottomrule
+\end{tabular}
+\end{table*}
